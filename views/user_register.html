@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1> Create your Account </h1>
+	<form class="form-horizontal" method="post" action="{{ url_for('user.user_register') }}" >
+      <div class="form-group">
+        <label for="username" class="col-sm-2 control-label">Username</label>
+        <div class="col-sm-5">
+          <input type="text" class="form-control" pattern="[\w]{3,}" required id="username" maxlength="20" name="username" placeholder="Username">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password" class="col-sm-2 control-label">Password</label>
+        <div class="col-sm-5">
+          <input type="password" class="form-control" id="password" required name="password" maxlength="15" placeholder="Password">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password_confirm" class="col-sm-2 control-label">Confirm Password</label>
+        <div class="col-sm-5">
+          <input type="password" class="form-control" id="password_confirm" required maxlength="15" name="password_confirm" placeholder="Confirm Password">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email" class="col-sm-2 control-label">Email</label>
+        <div class="col-sm-5">
+          <input type="email" class="form-control" id="email" required name="email" maxlength="20" placeholder="Email">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="firstname" class="col-sm-2 control-label">First Name</label>
+        <div class="col-sm-5">
+          <input type="text" class="form-control" id="firstname" required name="firstname" maxlength="20" placeholder="First name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="lastname" class="col-sm-2 control-label">Last Name</label>
+        <div class="col-sm-5">
+          <input type="text" class="form-control" id="lastname" required name="lastname" maxlength="20" placeholder="Last name">
+        </div>
+      </div>
+      <div class="form-group form-group-small">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="col-sm-offset-2 col-sm-4">
+                <p class="text-danger">Error: {{ messages[0] }}</p>
+            </div>
+          {% endif %}
+        {% endwith %}
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-3">
+          <button type="submit" class="btn btn-default" id="register_btn">Register</button>
+        </div>
+      </div>
+    </form>
+{% endblock%}

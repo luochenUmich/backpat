@@ -12,4 +12,4 @@ def main_route():
     # user = cur.fetchone()
     # username = user['username']
     # email = user['email']
-    return render_template('base.html')
+    return render_template('index.html')

@@ -19,17 +19,18 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Welcome to Backpat</a>
+          <a class="navbar-brand" href="{{ url_for('main.main_route') }}">Welcome to Backpat</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
+            <li class="active"><a href="{{ url_for('main.main_route') }}">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Menu <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Log In</a></li>
+                <li><a href="{{ url_for('user.user_login') }}">Log In</a></li>
+                <li><a href="{{ url_for('user.user_register') }}">Sign Up</a></li>
               </ul>
             </li>
           </ul>
@@ -40,49 +41,8 @@
   <!-- Main Content -->
   <br><br><br><br>
   <div class="container" id="mainContent">
-    <div class="row">
-		<div class="col-sm-6">
-			<h1>Current Posts</h1>
-			<div class="row post">
-				<div class="row postHeader">
-					<div class="col-sm-8">
-						Posty Title
-					</div>
-					<div class="col-sm-1">
-					Open
-					</div>
-					<div class="col-sm-1">
-					Hide
-					</div>
-				</div>
-				<div class="row" id="postBody">
-					<div class="col-sm-12">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-					</div>
-				</div>
-			</div>
-			<div class="row post" id="examplePostOne">
-				<div class="row postHeader">
-					<div class="col-sm-8">
-						Posty Title
-					</div>
-					<div class="col-sm-1">
-					Open
-					</div>
-					<div class="col-sm-1">
-					Hide
-					</div>
-				</div>
-				<div class="row" id="postBody">
-					<div class="col-sm-12">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-					</div>
-				</div>
-			</div>
-		</div>
-    </div>
+    {% block content %}{% endblock %}
   </div>
-
 
   <!-- Footer -->
 
