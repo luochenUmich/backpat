@@ -22,7 +22,7 @@ def signUp():
             
             conn = mysql.connect()
             cursor = conn.cursor()
-			cursor.execute("insert into post (userid, summary, description, dateCreated, dateLastModified, active) values (%s, %s, %s, GETDATE(), GETDATE(), 1)", (_userid, _summary, _description))
+            cursor.execute("insert into post (userid, summary, description, dateCreated, dateLastModified, active) values (%s, %s, %s, GETDATE(), GETDATE(), 1)", (_userid, _summary, _description))
             cursorid = cursor.lastrowid
 
             if cursorid is not 0:
