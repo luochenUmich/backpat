@@ -24,12 +24,13 @@ def user_login():
         cur = conn.cursor(MySQLdb.cursors.DictCursor)
         cur.execute("SELECT * FROM USER WHERE USERNAME='%s'" % request.form['username'])
         user = cur.fetchone()
+        print(user)
         if user is None:
             flash('Username does not exist!')
             return render_template('user_login.html')
 
         # Forget password or password is not correct
-        if hashlib.md5(request.form['password']).hexdigest() != user['PASSWORD']:
+        if hashlib.md5(request.form['password']).hexdigest() != user['password']:
             flash('Wrong password! Please try again')
             return render_template('user_login.html', prev_url=request.args.get('url'))
 
@@ -44,8 +45,6 @@ def user_logout():
 
 @user.route('/user', methods=['GET','POST'])
 def user_register():
-    if request.method == 'GET' and is_logged_in():
-        return redirect(url_for('.user_edit'))
     if request.method == 'GET':
         # return the register page
         return render_template('user_register.html')
@@ -73,6 +72,18 @@ def user_register():
 
         # send verification email
         return redirect(url_for('main.main_route'))
+
+@user.route('/profile', methods=['GET'])
+def user_profile():
+    if 'username' not in session:
+        return render_template('user_login.html')
+    else:
+        # Check if user exists and if password is correct
+        conn = mysql.connection
+        cur = conn.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute("SELECT * FROM POST WHERE USERNAME='%s'" % session['username'])
+        posts = cur.fetchall()
+        return render_template('user_profile.html', posts=posts)
 
 @user.route('/user/delete', methods=['GET'])
 def user_delete():
