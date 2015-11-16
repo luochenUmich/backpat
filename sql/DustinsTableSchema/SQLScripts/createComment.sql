@@ -2,24 +2,19 @@ CREATE TABLE IF NOT EXISTS `mydb`.`comment` (
   `commentid` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `postid` INT NOT NULL COMMENT '',
   `parentCommentid` INT NULL COMMENT '',
-  `userid` INT NULL COMMENT '',
+  `username` VARCHAR(20) NULL COMMENT '',
   `deletedByDate` DATE NULL COMMENT '',
-  `deletedByUserId` INT NULL COMMENT '',
+  `deletedByUsername` VARCHAR(20) NULL COMMENT '',
   `active` INT NULL COMMENT '',
   `dateCreated` DATE NULL COMMENT '',
   `comment` MEDIUMTEXT NULL COMMENT '',
   PRIMARY KEY (`commentid`)  COMMENT '',
-  INDEX `deletedByUserId_idx` (`deletedByUserId` ASC)  COMMENT '',
   INDEX `postid_idx` (`postid` ASC)  COMMENT '',
-  INDEX `userid_idx` (`userid` ASC)  COMMENT '',
+  INDEX `username_idx` (`username` ASC)  COMMENT '',
+  INDEX `deletedByUsername_idx` (`deletedByUsername` ASC)  COMMENT '',
   CONSTRAINT `parentCommentid`
     FOREIGN KEY (`commentid`)
     REFERENCES `mydb`.`comment` (`commentid`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `userid`
-    FOREIGN KEY (`userid`)
-    REFERENCES `mydb`.`user` (`userid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `postid`
@@ -27,9 +22,14 @@ CREATE TABLE IF NOT EXISTS `mydb`.`comment` (
     REFERENCES `mydb`.`post` (`postid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `deletedByUserId`
-    FOREIGN KEY (`deletedByUserId`)
-    REFERENCES `mydb`.`user` (`userid`)
+  CONSTRAINT `username`
+    FOREIGN KEY (`username`)
+    REFERENCES `mydb`.`user` (`username`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `deletedByUsername`
+    FOREIGN KEY (`deletedByUsername`)
+    REFERENCES `mydb`.`user` (`username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB

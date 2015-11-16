@@ -3,12 +3,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`category` (
   `categoryName` VARCHAR(100) NOT NULL COMMENT '',
   `active` TINYINT(1) NULL COMMENT '',
   `dateCreated` DATE NULL COMMENT '',
-  `createdById` INT NULL COMMENT '',
+  `createdByUsername` VARCHAR(20) NULL COMMENT '',
   PRIMARY KEY (`categoryid`)  COMMENT '',
-  INDEX `createdById_idx` (`createdById` ASC)  COMMENT '',
-  CONSTRAINT `createdById`
-    FOREIGN KEY (`createdById`)
-    REFERENCES `mydb`.`user` (`userid`)
+  INDEX `createdByUsername_idx` (`createdByUsername` ASC)  COMMENT '',
+  CONSTRAINT `createdByUsername`
+    FOREIGN KEY (`createdByUsername`)
+    REFERENCES `mydb`.`user` (`username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
