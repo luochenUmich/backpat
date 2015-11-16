@@ -8,7 +8,7 @@ def destroy_session():
 
 # You only need to use these two functions from outside
 def is_logged_in():
-    if 'username' in session and is_active():
+    if 'username' in session:
         return True
     else:
         return False

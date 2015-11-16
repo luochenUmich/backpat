@@ -1,8 +1,8 @@
 # here is the place we put all configurations
 # mysql configurations
-# MYSQL_USER = 'root'
-# MYSQL_PASSWORD = ''
-# MYSQL_DB = 'backpat'
+MYSQL_USER = 'root'
+MYSQL_PASSWORD = ''
+MYSQL_DB = 'mydb'
 
 # general configuration
 DEBUG=True
