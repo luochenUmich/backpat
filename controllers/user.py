@@ -22,7 +22,7 @@ def user_login():
         # Check if user exists and if password is correct
         conn = mysql.connection
         cur = conn.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute("SELECT * FROM USER WHERE USERNAME='%s'" % request.form['username'])
+        cur.execute("SELECT * FROM user WHERE USERNAME='%s'" % request.form['username'])
         user = cur.fetchone()
         print(user)
         if user is None:
@@ -55,9 +55,9 @@ def user_register():
             return render_template('user_register.html')
 
         # check if username already exists
-        conn = mysql.connect()
+        conn = mysql.connection
         cur = conn.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute("SELECT * FROM USER WHERE USERNAME='%s'" % request.form['username'])
+        cur.execute("SELECT * FROM user WHERE USERNAME='%s'" % request.form['username'])
         res = cur.fetchall()
         if (len(res) >= 1):
             flash('Username already exists!')
@@ -65,7 +65,7 @@ def user_register():
 
         # insert the user to database
         password_hash = hashlib.md5(request.form['password']).hexdigest()
-        cur.execute("INSERT INTO USER (USERNAME, PASSWORD, EMAIL) "
+        cur.execute("INSERT INTO user (USERNAME, PASSWORD, EMAIL) "
                     "VALUES ('%s', '%s', '%s')" % (request.form['username'],
                     password_hash, request.form['email']))
         conn.commit()
@@ -94,7 +94,7 @@ def user_delete():
     cur = conn.cursor(MySQLdb.cursors.DictCursor)
 
     # delete user
-    cur.execute("DELETE FROM USER WHERE USERNAME='%s'" % session['username'])
+    cur.execute("DELETE FROM user WHERE USERNAME='%s'" % session['username'])
     conn.commit()
 
     # destroy session

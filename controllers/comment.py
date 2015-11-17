@@ -18,7 +18,7 @@ def makeComment():
 		# validate the received values
 		if postid and _username and _comment and _parentCommentid:
 			# All Good, let's call MySQL
-			conn = mysql.connect()
+			conn = mysql.connection
 			cursor = conn.cursor()
 			cursor.execute("""insert into comment (postid, parentCommentid, username, comment) values (%s, %s, %s, %s)""", (_postid, _parentCommentid, _username, _comment))
 			commentid = cursor.lastrowid

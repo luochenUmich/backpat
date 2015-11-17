@@ -27,7 +27,7 @@ def create():
         if _username and _summary and _description:
             
             # All Good, let's call MySQL
-            conn = mysql.connect()
+            conn = mysql.connection
             cursor = conn.cursor()
             cursor.execute("insert into post (username, summary, description) values (%s, %s, %s)", (_username, _summary, _description))
 
@@ -35,7 +35,7 @@ def create():
 
             if cursorid is not 0:
                 conn.commit()
-                return redirect(url_for('post_view.post_view_route'))
+                return redirect(url_for('post_view.show_post') + "?postid=" + cursorid)
             else:
                 return json.dumps({'error':"Post could not be created: "})
         else:
