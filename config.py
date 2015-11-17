@@ -1,8 +1,9 @@
 # here is the place we put all configurations
 # mysql configurations
-MYSQL_USER = 'root'
-MYSQL_PASSWORD = ''
+MYSQL_USER = 'backpat'
+MYSQL_PASSWORD = 'backpat'
 MYSQL_DB = 'mydb'
+MYSQL_HOST = '52.33.249.188'
 
 # general configuration
 DEBUG=True
