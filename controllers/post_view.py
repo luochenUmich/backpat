@@ -28,6 +28,7 @@ def show_post():
                     where postid = %s
 					limit 1""", (postid))
 	post = cursor.fetchone()
+	cursor.close()
 	if not post:
 		return json.dumps({'error':'postid not valid'})
 	
@@ -38,12 +39,10 @@ def show_post():
 	#if (post["dateLastModified"] and post["dateCreated"] != post["dateLastModified"]):
 	#    dateInfo += "Last Modified: " + str(post["dateLastModified"])
 	#name = generateUniquename(opUsername, postid, opUsername)
-	conn.close()
-	cursor.close()
     
     #post_html = render_template('post_view_post_template.html', title=post["summary"], uniqname=name, dateCreatedInfo=dateInfo, numComments=post["numComments"], description=post["comments"])
     
-	return render_template('post_view.html', title=post["summary"], dateCreatedInfo=dateInfo, description=post["comments"], comment_section=comment_html)
+	return render_template('post_view.html', title=post["summary"], dateCreatedInfo=dateInfo, description=post["description"], comment_section=comment_html)
     
 def generateUniquename(username, postid, opUsername): #make this work better in future
     name = "uniqueName" + str(username) + "-" + str(postid)
@@ -56,15 +55,16 @@ def generateCommentTree(commentid, postid, opUsername): #Returns the html of the
 		comment_template_html = open('../views/comment_template.html', 'r').read()
 	htmlToReturn = ""
 	query = """select commentid, username, dateCreated, comment from comment where active = 1 and """ + ("COALESCE(parentCommentid, 0) = 0 and postid = %s" if commentid == 0 else "parentCommentid = %s")
+	print(query)
 	conn = mysql.connection
 	cursor = conn.cursor()
-	cursor.execute(query, (postid) if commentid == 0 else (commentid))
-	comment = cursor.fetchall()
-	while(comment):
+	id = postid if commentid == 0 else commentid
+	print(id)
+	cursor.execute(query, (id))
+	comments = cursor.fetchall()
+	cursor.close()
+	for comment in comments:
 		childrenHtml = generateCommentTree(comment["commentid"], postid, opUsername)
 		htmlToReturn += comment_template_html % (comment["commentid"], str(comment["dateCreated"]), comment["comment"], childrenHtml)
 		#htmlToReturn += render_template('comment_template.html', username=generateUniquename(comment["username"], postid, opUsername), dateCreated=str(comment["dateCreated"]), commentid=comment["commentid"], description=comment["comment"], comment_child_html=childrenHtml)
-		comment = cursor.fetchone()
-	conn.close()
-	cursor.close()
 	return htmlToReturn

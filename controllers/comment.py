@@ -8,8 +8,11 @@ comment = Blueprint('comment', __name__)
 
 @comment.route('/comment',methods=['POST'])
 def makeComment():
+	print('Comments==Happening')
 	if not is_logged_in():
 		return render_template('user_login.html')
+	if 'postid' not in request.args:
+		return json.dumps({'error':'postid not specified'})
 	postid = request.args.get('postid')
 	try:
 		_username = session['username'] #TD: Add in login function/check
@@ -28,10 +31,10 @@ def makeComment():
 				return show_post()
 			else:
 				flash('Comment could not be created due to SQL error')
-				return show_post()
+				return redirect(url_for('post_view.show_post') + "?postid=" + postid)
 		else:
 			flash('Enter the required fields')
-			return show_post()
+			return redirect(url_for('post_view.show_post') + "?postid=" + postid)
 			
 	except Exception as e:
 		flash('Internal server error: ' + str(e))
