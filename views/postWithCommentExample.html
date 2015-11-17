@@ -52,13 +52,29 @@
 				{{description}}
 			</div>
 		</div>
-		<div class="cols-sm-12">
-			<div class="show_hide btn-info col-sm-3">Show Comments</div>
-			<div class="col-sm-6"></div>
-			<div class="comment-child col-sm-3">
-			{{comment_child_html}}
+			<div class="options col-sm-12">
+				<div class="comment-button btn-info col-sm-2">Show Comments</div>
 			</div>
-		</div>
+			<div class="comment-child col-sm-11 col-sm-offset-1">
+			<div class="row comment" id="comment{{commentid}}">
+				<div class="row commentHeader">
+					<div class="col-sm-4">
+						{{username}} - {{dateCreated}}
+					</div>
+				</div>
+				<div class="row commentContent">
+					<div class="col-sm-4">
+						{{description}}
+					</div>
+				</div>
+					<div class="options col-sm-12">
+						<div class="comment-button btn-info col-sm-2">Show Comments</div>
+					</div>
+					<div class="comment-child col-sm-11 col-sm-offset-1">
+					{{comment_child_html}}
+					</div>
+			</div>
+			</div>
 	</div>
   </div>
 

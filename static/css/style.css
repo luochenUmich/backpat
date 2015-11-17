@@ -12,3 +12,33 @@ h1 {
     margin-top: 27px;
     margin-bottom: 50px
 }
+
+.comment-child {
+	display: none;
+}
+
+.comment{
+	border: 3px solid lightblue;
+	border-radius: 3px;
+	padding-bottom: 10px;
+}
+
+.commentHeader{
+	border-bottom: 2px solid lightblue;
+	margin-right: 0px;
+	margin-left: 0px;
+	}
+.commentContent{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-right: 0px;
+	margin-left: 0px;
+	}
+.commentContainer{
+margin-right: 0px;
+margin-left: 0px;
+}
+
+.comment-button{
+	border-radius: 2px;
+}
