@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `mydb`.`pillar` (
   `username` VARCHAR(20) NOT NULL COMMENT '',
   `supportUsername` VARCHAR(20) NOT NULL COMMENT '',
-  `dateCreated` DATE NULL COMMENT '',
+  `dateCreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '',
   PRIMARY KEY (`supportUsername`, `username`)  COMMENT '',
   INDEX `username_idx` (`username` ASC)  COMMENT '',
   CONSTRAINT `username`

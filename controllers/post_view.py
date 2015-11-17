@@ -75,12 +75,12 @@ def makeComment():
             # All Good, let's call MySQL
             conn = mysql.connect()
             cursor = conn.cursor()
-            cursor.execute("""insert into comment (postid, parentCommentid, username, active, dateCreated, comment) values (%s, %s, %s, 1, GETDATE(), %s)""", (_postid, _parentCommentid, _username, _comment))
+            cursor.execute("""insert into comment (postid, parentCommentid, username, comment) values (%s, %s, %s, %s)""", (_postid, _parentCommentid, _username, _comment))
             commentid = cursor.lastrowid
 
             if commentid is not 0:
                 conn.commit()
-                return json.dumps({'message':'Comment created successfully !'})
+                return show_post()
             else:
                 return json.dumps({'error':"Comment could not be created: "})
         else:
