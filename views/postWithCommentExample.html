@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <meta name='author' content='Dustin Ferguson, Chen Luo, Derek Eliasen'>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <title>Backpat</title>
+</head>
+
+<body>
+  <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{{ url_for('main.main_route') }}">Welcome to Backpat</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="{{ url_for('main.main_route') }}">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Menu <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="{{ url_for('user.user_login') }}">Log In</a></li>
+                <li><a href="{{ url_for('user.user_register') }}">Sign Up</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+  <!-- Main Content -->
+  <br><br><br><br>
+  <div class="container" id="mainContent">
+	<div class="row comment" id="comment{{commentid}}">
+		<div class="row commentHeader">
+			<div class="col-sm-4">
+				{{username}} - {{dateCreated}}
+			</div>
+		</div>
+		<div class="row commentContent">
+			<div class="col-sm-4">
+				{{description}}
+			</div>
+		</div>
+		<div class="cols-sm-12">
+			<div class="show_hide btn-info col-sm-3">Show Comments</div>
+			<div class="col-sm-6"></div>
+			<div class="comment-child col-sm-3">
+			{{comment_child_html}}
+			</div>
+		</div>
+	</div>
+  </div>
+
+  <!-- Footer -->
+
+<div class="container footer navbar-fixed-bottom">
+    <p class="text-muted">
+        Backpat Group
+    </p>
+</div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../static/js/main.js"></script>
+</body>
+</html>

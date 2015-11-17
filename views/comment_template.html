@@ -1,13 +1,15 @@
-<div class='row comment' id='comment{{commentid}}'>
-	<div class='row commentHeader'>
-		<div class='col-sm-8'>
-			<span id='username'></span> - <span id='date'></span>
-			</div>
-	</div>
-	<div class='row'>
-		<div class='col-sm-12' id='description'>
+<div class="row comment" id="comment{{commentid}}">
+	<div class="row commentHeader">
+		<div class="col-sm-8">
+			{{username}} - {{dateCreated}}
 		</div>
 	</div>
-	<div class='comment-child'>
+	<div class="row">
+		<div class="col-sm-12">
+			{{description}}
+		</div>
+	</div>
+	<div class="comment-child" expanded={{expanded}}>
+		{{comment-child-html}}
 	</div>
 </div>
