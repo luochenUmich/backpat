@@ -1,6 +1,7 @@
 from flask import *
 from extensions import mysql
 import MySQLdb
+import MySQLdb.cursors
 
 main2 = Blueprint('main2', __name__)
 
@@ -12,7 +13,7 @@ def post_route():
                 left join (select COUNT(*) ct, postid from comment where active = 1 group by postid) nc on nc.postid = p.postid
                 where p.active = 1 order by dateCreated, dateLastModified, summary""";
     conn = mysql.connect()
-    cursor = conn.cursor()
+    cursor = conn.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute(query)
     post = cursor.fetchone()
     while(comment):

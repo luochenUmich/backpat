@@ -3,9 +3,9 @@ CREATE TABLE IF NOT EXISTS `mydb`.`post` (
   `username` VARCHAR(20) NULL COMMENT '',
   `summary` VARCHAR(100) NULL COMMENT '',
   `description` MEDIUMTEXT NULL COMMENT '',
-  `dateCreated` DATE NULL COMMENT '',
-  `dateLastModified` DATE NULL COMMENT '',
-  `active` TINYINT(1) NULL COMMENT '',
+  `dateCreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '',
+  `dateLastModified` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '',
+  `active` TINYINT(1) DEFAULT 1 COMMENT '',
   PRIMARY KEY (`postid`)  COMMENT '',
   INDEX `username_idx` (`username` ASC)  COMMENT '',
   CONSTRAINT `username`
