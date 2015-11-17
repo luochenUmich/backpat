@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+	<h1>New Post</h1>
+	<form class="form-horizontal" method="post" action="{{ url_for('post_create.create') }}" >
+      <div class="form-group">
+        <label for="summary" class="col-sm-2 control-label">Title:</label>
+        <div class="col-sm-5">
+          <input type="text" class="form-control" pattern="[\w]{3,}" required id="summary" maxlength="20" name="_summary" placeholder="Title">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="description" class="col-sm-2 control-label">Description:</label>
+        <div class="col-sm-5">
+          <textarea rows="6" type="password" class="form-control" id="description" required name="_description" placeholder="Description"></textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-3">
+          <button type="submit" class="btn btn-default">Post</button>
+        </div>
+      </div>
+    </form>
+{% endblock %}

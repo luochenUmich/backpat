@@ -1,5 +1,6 @@
 from flask import *
 from extensions import mysql
+from helper import *
 import MySQLdb
 import MySQLdb.cursors
 
@@ -11,9 +12,9 @@ def post_view_route():
     
 @post_view.route('/')
 def show_post():
-	if not is_logged_in():
-		return render_template('user_login.html')
-	postid = request.args.get('postid')
+    if not is_logged_in():
+        return render_template('user_login.html')
+    postid = request.args.get('postid')
     conn = mysql.connect()
     cursor = conn.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute("""select top 1 username, summary, description. dateCreated, dateLastModified, p.ct [numComments]
@@ -49,7 +50,7 @@ def generateCommentTree(commentid, postid, opUsername): #Returns the html of the
     conn = mysql.connect()
     cursor = conn.cursor()
     cursor.execute(query, (postid) if commentid == 0 else (commentid))
-    comment = cursor.fetchone()
+    comment = cursor.fetchall()
     while(comment):
         childrenHtml = generateCommentTree(comment["commentid"], postid, opUsername)
         htmlToReturn += render_template('comment_template.html', username=generateUniquename(comment["username"], postid, opUsername), dateCreated=str(comment["dateCreated"]), commentid=comment["commentid"], description=comment["comment"], comment_child_html=childrenHtml)
@@ -61,9 +62,9 @@ def generateCommentTree(commentid, postid, opUsername): #Returns the html of the
 
 @post_view.route('/',methods=['POST'])
 def makeComment():
-	if not is_logged_in():
-		return render_template('user_login.html')
-	postid = request.args.get('postid')
+    if not is_logged_in():
+        return render_template('user_login.html')
+    postid = request.args.get('postid')
     try:
         _username = session['username'] #TD: Add in login function/check
         _comment = request.form['_comment'] #text of the comment
