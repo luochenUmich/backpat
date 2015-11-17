@@ -10,12 +10,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`comment` (
   PRIMARY KEY (`commentid`)  COMMENT '',
   INDEX `postid_idx` (`postid` ASC)  COMMENT '',
   INDEX `username_idx` (`username` ASC)  COMMENT '',
-  CONSTRAINT `postid`
+  CONSTRAINT `comment_postid`
     FOREIGN KEY (`postid`)
     REFERENCES `mydb`.`post` (`postid`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `username`
+  CONSTRAINT `comment_username`
     FOREIGN KEY (`username`)
     REFERENCES `mydb`.`user` (`username`)
     ON DELETE NO ACTION
