@@ -1,22 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <br><br><br><br>
-<form id="login_form" class="form-horizontal" action="{{ url_for('user.user_login') }}" method="post">
-  <div class="form-group">
-      <input type="hidden" class="form-control" name="prev_url" value="{{ prev_url }}">
-  </div>
-  <div class="form-group">
-    <label for="username_login" class="col-sm-offset-2 col-sm-2 control-label">Username</label>
-    <div class="col-sm-4">
-      <input type="text" class="form-control" required id="username_login" placeholder="Username" name="username">
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="password_login" class="col-sm-offset-2 col-sm-2 control-label">Password</label>
-    <div class="col-sm-4">
-      <input type="password" class="form-control" requried id="password_login" placeholder="Password" name="password">
-    </div>
-  </div>
+<form id="login_form" class="form-horizontal" action="" method="">
   <div class="form-group form-group-small">
     {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -26,11 +11,52 @@
       {% endif %}
     {% endwith %}
   </div>
-  <div class="form-group">
-    <div class="col-sm-offset-4 col-sm-10">
-      <input type="submit" name="sign_in" class="btn btn-default" value="Sign in">
-      <input type="submit" name="forget_password" class="btn btn-link" value="Forget Password?">
+  <div class="row post">
+		<!-- Post Header -->
+		<div class="row post-title">
+			<div class="col-sm-11">
+				<strong>{{title}}</strong>
+				 - {{dateCreatedInfo}}
+			</div>
+			<div class="col-sm-1">
+				<a href="#" data-toggle="modal" data-target="#commentModal"
+					   data-id="0">Reply</a> ·
+				<a class="hide-btn" href="#" data-toggle="collapse" data-target="div.comment > div > div.media">Show</a>
+			</div>
+		</div>
+
+		<!-- Post Description -->
+		<div class="row post-content">
+			<div class="col-sm-12">
+				<p>{{description}}</p>
+			</div>
+		</div>
+		<div class="row comment">
+			<div class="col-sm-12">
+				{{comment_section}}
+			</div>
+		</div>
+		
+	</div>
+	<div class="modal fade" id="commentModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">New Comment</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ url_for('comment.makeComment') }}">
+                        <div class="form-group">
+                            <!-- Parent Comment ID will be a hidden input filed -->
+                            <input type="hidden" name="parentCommentID" value="">
+                            <textarea class="form-control" rows="6" id="message-text" placeholder="Comment"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Reply</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </form>
 {% endblock %}

@@ -55,7 +55,7 @@ def user_register():
             return render_template('user_register.html')
 
         # check if username already exists
-        conn = mysql.connection
+        conn = mysql.connect()
         cur = conn.cursor(MySQLdb.cursors.DictCursor)
         cur.execute("SELECT * FROM USER WHERE USERNAME='%s'" % request.form['username'])
         res = cur.fetchall()
