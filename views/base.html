@@ -3,57 +3,53 @@
 <head>
     <meta name='author' content='Dustin Ferguson, Chen Luo, Derek Eliasen'>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="../static/css/style.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../static/css/style.css"/>
     <title>Backpat</title>
 </head>
 
 <body>
-  <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
+<!-- Fixed navbar -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="{{ url_for('main.main_route') }}">Welcome to Backpat</a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url_for('main.main_route') }}">Welcome to Backpat</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <div class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">User Menu <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                {% if not session.username %}
-                  <li><a href="{{ url_for('user.user_login') }}">Log In</a></li>
-                  <li><a href="{{ url_for('user.user_register') }}">Sign Up</a></li>
-                {% else %}
-                  <li><a href="{{ url_for('user.user_profile') }}">Profile</a></li>
-                  <li><a href="{{ url_for('user.user_logout') }}">Log out </a></li> 
-                {% endif %}
-              </ul>
-            </li>
-          </div>
+            <div class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">User Menu <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% if not session.username %}
+                            <li><a href="{{ url_for('user.user_login') }}">Log In</a></li>
+                            <li><a href="{{ url_for('user.user_register') }}">Sign Up</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('user.user_profile') }}">Profile</a></li>
+                            <li><a href="{{ url_for('user.user_logout') }}">Log out </a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            </div>
         </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+    </div>
+</nav>
 
-  <!-- Main Content -->
-  <br><br><br><br>
-  <div class="container" id="mainContent">
-  {% block content %}{% endblock %}
-<!--     <div class="row">
-		<div class="col-sm-6">
-			<h1>Current Posts</h1>
-			{{PostHtml}}
-		</div>
-    </div> -->
-  </div>
+<!-- Main Content -->
+<br><br><br><br>
 
-  <!-- Footer -->
+<div class="container" id="mainContent">
+    {% block content %}{% endblock %}
+</div>
 
+<!-- Footer -->
 <div class="container footer navbar-fixed-bottom">
     <p class="text-muted">
         Backpat Group
@@ -61,8 +57,8 @@
 </div>
 
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="/static/js/main.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/js/main.js"></script>
 </body>
 </html>

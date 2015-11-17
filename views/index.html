@@ -1,55 +1,151 @@
 {% extends "base.html" %}
 {% block content %}
 
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <p class="text-success">{{ messages[0] }}</p>
-    {% endif %}
-{% endwith %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <p class="text-success">{{ messages[0] }}</p>
+        {% endif %}
+    {% endwith %}
 
-  <div class="row">
-		<div class="col-sm-8">
-			<h1>Current Posts</h1>
-			<div class="row post">
-				<div class="row postHeader">
-					<div class="col-sm-8">
-						Posty Title
-					</div>
-					<div class="col-sm-1">
-					Open
-					</div>
-					<div class="col-sm-1">
-					Hide
-					</div>
-				</div>
-				<div class="row" id="postBody">
-					<div class="col-sm-12">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-					</div>
-				</div>
-			</div>
-			<div class="row post" id="examplePostOne">
-				<div class="row postHeader">
-					<div class="col-sm-8">
-						Posty Title
-					</div>
-					<div class="col-sm-1">
-					Open
-					</div>
-					<div class="col-sm-1">
-					Hide
-					</div>
-				</div>
-				<div class="row" id="postBody">
-					<div class="col-sm-12">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-sm-4">
-			<a href="{{ url_for('post.post_route') }}"class="btn btn-lg btn-primary center-block"> Post </a>
-		</div>
-  </div>
+
+    <div class="row">
+        <div class="col-sm-10">
+            <h1>Current Posts</h1>
+
+            <!-- Post -->
+            <div class="row post">
+                <!-- Post Header -->
+                <div class="row post-title">
+                    <div class="col-sm-11">
+                        <strong>Posty Title</strong>
+                    </div>
+                    <div class="col-sm-1">
+                        <a class="hide-btn" href="#" data-toggle="collapse" data-target="div.comment > div > div.media">Show</a>
+                    </div>
+                </div>
+
+                <!-- Post Description -->
+                <div class="row post-content">
+                    <div class="col-sm-12">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+                            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                            cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+                    </div>
+                </div>
+
+                <!-- Comments Tree -->
+                <div class="row comment">
+                    <div class="col-sm-12">
+                        <div class="media collapse">
+                            <div class="media-left">
+                                <a href="#">
+                                    <img class="media-object"
+                                         src="https://www.hallaminternet.com/assets/URL-tagging-image-300x240.png"
+                                         height="30"
+                                         width="30" alt="">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h6 class="media-heading">Everything will be alright!</h6>
+                                <!-- To pass other data to modal, just take a look at main.js and you will understand -->
+                                <a href="#" data-toggle="modal" data-target="#commentModal" data-id="5">Reply</a> ·
+                                <a class="hide-btn" href="#" data-toggle="collapse" data-target=":focus ~ div.media">Show</a>
+
+                                <!-- first nested comment -->
+                                <div class="media collapse">
+                                    <div class="media-left">
+                                        <a href="#">
+                                            <img class="media-object"
+                                                 src="https://www.hallaminternet.com/assets/URL-tagging-image-300x240.png"
+                                                 height="30" width="30" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <h6 class="media-heading">Don't worry too much</h6>
+                                        <a href="#" data-toggle="modal" data-target="#commentModal"
+                                           data-id="6">Reply</a> ·
+                                        <a class="hide-btn" href="#">Show</a>
+                                    </div>
+                                </div>
+
+                                <!-- second nested comment -->
+                                <div class="media collapse">
+                                    <div class="media-left">
+                                        <a href="#">
+                                            <img class="media-object"
+                                                 src="https://www.hallaminternet.com/assets/URL-tagging-image-300x240.png"
+                                                 height="30" width="30" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <h6 class="media-heading">Cheer Up!</h6>
+                                        <a href="#" data-toggle="modal" data-target="#commentModal"
+                                           data-id="6">Reply</a> ·
+                                        <a class="hide-btn" href="#">Show</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <a class="btn btn-lg btn-primary center-block" data-toggle="modal" data-target="#postModal"> Post </a>
+        </div>
+    </div>
+
+
+    <!-- Post Modal -->
+    <div class="modal fade" id="postModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">New Post</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ url_for('post_create.create') }}">
+                        <div class="form-group">
+                            <label for="summary" class="control-label">Title:</label>
+                                <input type="text" class="form-control" pattern="[\w]{3,}" required id="summary"
+                                       maxlength="20" name="_summary" placeholder="Title">
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="control-label">Description:</label>
+                            <textarea rows="6" class="form-control" id="description" required
+                                          name="_description" placeholder="Description"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Post</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comment Modal -->
+    <div class="modal fade" id="commentModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">New Comment</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{{ url_for('comment.makeComment') }}">
+                        <div class="form-group">
+                            <!-- Parent Comment ID will be a hidden input filed -->
+                            <input type="hidden" name="parentCommentID" value="">
+                            <textarea class="form-control" rows="6" id="message-text" placeholder="Comment"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Reply</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

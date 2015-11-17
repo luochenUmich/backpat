@@ -1,7 +1,20 @@
 /*put all css here*/
 
 .post {
-	margin-top: 20px;
+	background-color: #f0f0f5;
+}
+.post-title{
+	margin-top: 12px;
+	margin-left: 6px;
+}
+
+.post-content {
+	margin-left: 6px;
+}
+
+.comment {
+	margin-left: 6px;
+	margin-bottom: 12px;
 }
 
 h1 {
@@ -13,32 +26,32 @@ h1 {
     margin-bottom: 50px
 }
 
-.comment-child {
-	display: none;
-}
+/*.comment-child {*/
+	/*display: none;*/
+/*}*/
 
-.comment{
-	border: 3px solid lightblue;
-	border-radius: 3px;
-	padding-bottom: 10px;
-}
+/*.comment{*/
+	/*border: 3px solid lightblue;*/
+	/*border-radius: 3px;*/
+	/*padding-bottom: 10px;*/
+/*}*/
 
-.commentHeader{
-	border-bottom: 2px solid lightblue;
-	margin-right: 0px;
-	margin-left: 0px;
-	}
-.commentContent{
-	padding-top: 10px;
-	padding-bottom: 10px;
-	margin-right: 0px;
-	margin-left: 0px;
-	}
-.commentContainer{
-margin-right: 0px;
-margin-left: 0px;
-}
+/*.commentHeader{*/
+	/*border-bottom: 2px solid lightblue;*/
+	/*margin-right: 0px;*/
+	/*margin-left: 0px;*/
+	/*}*/
+/*.commentContent{*/
+	/*padding-top: 10px;*/
+	/*padding-bottom: 10px;*/
+	/*margin-right: 0px;*/
+	/*margin-left: 0px;*/
+	/*}*/
+/*.commentContainer{*/
+/*margin-right: 0px;*/
+/*margin-left: 0px;*/
+/*}*/
 
-.comment-button{
-	border-radius: 2px;
-}
+/*.comment-button{*/
+	/*border-radius: 2px;*/
+/*}*/
