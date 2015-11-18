@@ -69,7 +69,7 @@ def user_register():
                     password_hash, request.form['email']))
         conn.commit()
 
-        # send verification email
+        session['username'] = request.form['username']
         return redirect(url_for('main.main_route'))
 
 @user.route('/profile', methods=['GET'])
