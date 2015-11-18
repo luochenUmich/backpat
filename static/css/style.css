@@ -2,6 +2,7 @@
 
 .post {
 	background-color: #f0f0f5;
+	margin-bottom:5px;
 }
 .post-title{
 	margin-top: 12px;
@@ -10,11 +11,14 @@
 
 .post-content {
 	margin-left: 6px;
+	margin-top:3px;
+	font-size:120%;
 }
 
 .comment {
 	margin-left: 6px;
 	margin-bottom: 12px;
+	padding-top: 4px;
 }
 
 h1 {

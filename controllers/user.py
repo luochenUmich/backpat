@@ -24,7 +24,6 @@ def user_login():
         cur = conn.cursor(MySQLdb.cursors.DictCursor)
         cur.execute("SELECT * FROM user WHERE USERNAME='%s'" % request.form['username'])
         user = cur.fetchone()
-        print(user)
         if user is None:
             flash('Username does not exist!')
             return render_template('user_login.html')

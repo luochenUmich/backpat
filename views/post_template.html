@@ -1,23 +1,17 @@
-<div class="row post" >
+<div class="row post" style="border:1px solid black;" >
 	<div class="row postHeader">
-		<div class="col-sm-7">
-			{}
+		<div class="col-sm-9">
+			<div style="font-weight:bold; font-size:120%">
+				<a href="{}">{}</a>
+			</div>
+			<div style="overflow-x:hidden;width:100%;">
+				{}
+			</div>
 		</div>
-		<div class="col-sm-1">
-			<a href="{{ url_for('post_view.show_post') }}?postid={}">View Post</a>
-		</div>
-		<div class="col-sm-1">
-		Hide
-		</div>
-		<div class="col-sm-2">
+		<div class="col-sm-2" style="text-align:center">
 		{}
 		</div>
-		<div class="col-sm-1">
-			{}
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-12">
+		<div class="col-sm-1" style="text-align:center">
 			{}
 		</div>
 	</div>

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<br><br><br><br>
+<br>
 <form id="login_form" class="form-horizontal" action="" method="">
   <div class="form-group form-group-small">
     {% with messages = get_flashed_messages() %}
@@ -14,51 +14,55 @@
   <div class="row post">
 		<!-- Post Header -->
 		<div class="row post-title">
-			<div class="col-sm-11">
-				<strong>{{title}}</strong>
-				 - {{dateCreatedInfo}}
+			<div class="col-sm-9" style="font-size:150%">
+				<strong>Title: </strong>{{title}}
+			</div>
+			<div class="col-sm-2">
+				{{dateCreatedInfo}}
 			</div>
 			<div class="col-sm-1">
 				<a href="#" data-toggle="modal" data-target="#commentModal"
-					   data-id="0">Reply</a> ·
-				<a class="hide-btn" href="#" data-toggle="collapse" data-target="div.comment > div > div.media">Show</a>
+					   data-id="0">Reply</a> 
+				<!--<a class="hide-btn" href="#" data-toggle="collapse" data-target="div.comment > div > div.media">Hide Replies</a>-->
 			</div>
 		</div>
 
 		<!-- Post Description -->
 		<div class="row post-content">
 			<div class="col-sm-12">
-				<p>{{description}}</p>
-			</div>
-		</div>
-		<div class="row comment">
-			<div class="col-sm-12">
-				{{comment_section}}
+				<p><strong>Description: </strong>{{description}}</p>
 			</div>
 		</div>
 		
 	</div>
-	<div class="modal fade" id="commentModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="exampleModalLabel">New Comment</h4>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="{{ url_for('comment.makeComment') }}?postid={{postid}}">
-                        <div class="form-group">
-                            <!-- Parent Comment ID will be a hidden input filed -->
-                            <input type="hidden" name="parentCommentID" value="">
-                            <textarea class="form-control" rows="6" id="message-text" placeholder="Comment"></textarea>
-                        </div>
-						<div class="form-group">
-							<button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
-							<button type="submit" class="btn btn-primary">Reply</button>
-						</div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+	<br/>
+	<div class="row post">
+		<div class="col-sm-12" style="font-size:larger; font-weight:bold;border-bottom:1px solid black;margin-top:3px;margin-bottom:3px">
+			Comments
+		</div>
+		<div class="col-sm-12" style="margin-top:3px">
+			{{comment_section|safe}}
+		</div>
+	</div>
 </form>
+<div class="modal fade" id="commentModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="exampleModalLabel">New Comment</h4>
+			</div>
+			<div class="modal-body">
+				<form id="newCommentForm" method="post" action="{{ url_for('comment.makeComment') }}?postid={{postid}}">
+					<div class="form-group">
+						<!-- Parent Comment ID will be a hidden input filed -->
+						<input type="hidden" name="parentCommentID" value="">
+						<textarea class="form-control" rows="6" id="message-text" name="comment" placeholder="Comment"></textarea>
+					</div>
+					<button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary">Reply</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock %}

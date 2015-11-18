@@ -8,7 +8,6 @@ post_create = Blueprint('post_create', __name__,template_folder='views')
 
 @post_create.route('/post/create',methods=['GET'])
 def post_route():
-    print "in post_route"
     if not is_logged_in():
         return render_template('user_login.html')    
     return render_template('post_create.html')

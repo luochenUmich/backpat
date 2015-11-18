@@ -5,10 +5,12 @@ $(document).ready(function(){
     });
 
     $('.hide-btn').click(function(){
-        if ($(this).text() === "Hide") {
-            $(this).text("Show");
-        } else if ($(this).text() === "Show"){
-            $(this).text("Hide");
+        if ($(this).text() === "Hide Replies") {
+            $(this).text("Show Replies");
+			$(this).siblings('.media.collapse').slideToggle();
+        } else if ($(this).text() === "Show Replies"){
+            $(this).text("Hide Replies");
+			$(this).siblings('.media.collapse').slideToggle();
         }
     });
 
