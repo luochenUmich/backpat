@@ -10,6 +10,7 @@ import hashlib
 import config
 import MySQLdb.cursors
 from datetime import date
+import sys
 
 post_view = Blueprint('post_view', __name__)
 comment_template_html = ""
@@ -56,11 +57,15 @@ def generateUniquename(username, postid, opUsername): #make this work better in 
     
 def generateCommentTree(commentid, postid, opUsername): #Returns the html of the comment tree starting at commentid recursively. If commentid = 0, start with the post itself
 	htmlToReturn = ""
-	query = """select commentid, username, dateCreated, comment from comment where active = 1 and """ + ("COALESCE(parentCommentid, 0) = 0 and postid = %s" if commentid == 0 else "parentCommentid = %s")
+	query = """select commentid, username, dateCreated, comment from comment where active = 1 and """ + ("COALESCE(parentCommentid, 0) = 0 and postid = %s" if commentid == 0 else "COALESCE(parentCommentid, 0) = %s")
 	conn = mysql.connection
 	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+	id = 0
 	id = postid if commentid == 0 else commentid
-	cursor.execute(query, (str(id)))
+	print(query)
+	print("id == " + str(id))
+	sys.stdout.flush()
+	cursor.execute(query,(str(id),))
 	comments = cursor.fetchall()
 	cursor.close()
 	for comment in comments:
