@@ -64,8 +64,8 @@ def user_register():
 
         # insert the user to database
         password_hash = hashlib.md5(request.form['password']).hexdigest()
-        cur.execute("INSERT INTO user (USERNAME, PASSWORD, EMAIL) "
-                    "VALUES ('%s', '%s', '%s')" % (request.form['username'],
+        cur.execute("INSERT INTO user (USERNAME, PASSWORD, EMAIL, ADMINLEVEL) "
+                    "VALUES ('%s', '%s', '%s', 0)" % (request.form['username'],
                     password_hash, request.form['email']))
         conn.commit()
 

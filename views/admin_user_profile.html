@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<form id="login_form" class="form-horizontal" action="" method="">
+  <div class="form-group form-group-small">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="col-sm-offset-4 col-sm-10">
+            <p class="text-danger">{{ messages[0] }}</p>
+        </div>
+      {% endif %}
+    {% endwith %}
+  </div>
+  <div style="font-size:larger; font-weight:bold;margin-top:3px;margin-bottom:3px; text-align:center">
+	User Information for {{username}}
+  </div>
+  </hr>
+  <div class="row">
+	<div class="row" style="font-size:larger; font-weight:bold;">
+		<div class="col-sm-6">
+			E-mail Address: {{email}}
+		</div>
+		<div class="col-sm-6">
+			User Type: {{usertype}}
+		</div>
+		<div class="col-sm-6">
+			Status: {{status}}
+		</div>
+		<div class="col-sm-6">
+			Registered On: {{registered_on}}
+		</div>
+	</div>
+	<div class="row" style="font-size:larger; font-weight:bold;">
+		
+	</div>
+  </div>
+  <ul class="nav nav-tabs">
+    <li  class="{{a_p}}"><a href="{{ url_for('admin_user_profile.show_user_profile') }}?username={{username}}&list=posts">Posts</a></li>
+    <li class="{{a_c}}"><a href="{{ url_for('admin_user_profile.show_user_profile') }}?username={{username}}&list=comments">Comments</a></li>
+    <li class="{{a_r}}"><a href="{{ url_for('admin_user_profile.show_user_profile') }}?username={{username}}&list=reports">Reports</a></li>
+  </ul>
+	</hr>
+	{{list|safe}}
+</form>
+{% endblock %}
