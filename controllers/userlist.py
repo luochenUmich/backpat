@@ -14,6 +14,11 @@ userlist = Blueprint('userlist', __name__,template_folder='views')
     
 @userlist.route('/admin/userlist',methods=['GET'])
 def show_users():
+	if not is_logged_in():
+		return redirect(url_for('user.user_login'))
+	if (getAdminLevel() < 2):
+		flash('You need to be an administrator to access this page')
+		return redirect(url_for('main.main_route'))
 	user_row_template_html = open('views/user_grid_row.html', 'r').read()
 	htmlToReturn = ""
 	query = """select u.username, u.email, CASE WHEN u.adminLevel > 2 THEN 'Admin' WHEN u.adminLevel > 1 THEN 'Moderator' ELSE 'Normal User' END as adminLevelText, CASE WHEN u.active then 'Active' else 'Inactive' end as activeStatus

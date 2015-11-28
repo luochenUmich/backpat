@@ -12,9 +12,14 @@ import MySQLdb.cursors
 import sys
 
 admin_user_profile = Blueprint('admin_user_profile', __name__,template_folder='views')
-    
+	
 @admin_user_profile.route('/admin/user_profile',methods=['GET'])
 def show_user_profile():
+	if not is_logged_in():
+		return redirect(url_for('user.user_login'))
+	if (getAdminLevel() < 2):
+		flash('You need to be an administrator to access this page')
+		return redirect(url_for('main.main_route'))
 	username = request.args.get('username')
 	list_type_qs = request.args.get('list')
 	
@@ -49,6 +54,11 @@ def show_user_profile():
 	
 @admin_user_profile.route('/admin/user_profile/make_user_admin',methods=['GET'])
 def make_user_admin():
+	if not is_logged_in():
+		return redirect(url_for('user.user_login'))
+	if (getAdminLevel() < 2):
+		flash('You need to be an administrator to access this page')
+		return redirect(url_for('main.main_route'))
 	username = request.args.get('username')
 	
 	query = """update user set adminLevel = 2 where username = %s and adminLevel != 2"""
@@ -65,6 +75,11 @@ def make_user_admin():
 	
 @admin_user_profile.route('/admin/user_profile/make_user_mod',methods=['GET'])
 def make_user_moderator():
+	if not is_logged_in():
+		return redirect(url_for('user.user_login'))
+	if (getAdminLevel() < 2):
+		flash('You need to be an administrator to access this page')
+		return redirect(url_for('main.main_route'))
 	username = request.args.get('username')
 	
 	query = """update user set adminLevel = 1 where username = %s and adminLevel != 1"""
@@ -81,6 +96,11 @@ def make_user_moderator():
 	
 @admin_user_profile.route('/admin/user_profile/make_user_normal',methods=['GET'])
 def make_user_normal():
+	if not is_logged_in():
+		return redirect(url_for('user.user_login'))
+	if (getAdminLevel() < 2):
+		flash('You need to be an administrator to access this page')
+		return redirect(url_for('main.main_route'))
 	username = request.args.get('username')
 	
 	query = """update user set adminLevel = 0 where username = %s and adminLevel != 0"""
