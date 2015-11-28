@@ -9,6 +9,7 @@ import threading
 import hashlib
 import config
 import MySQLdb.cursors
+import sys
 
 admin_user_profile = Blueprint('admin_user_profile', __name__,template_folder='views')
     
@@ -17,7 +18,7 @@ def show_user_profile():
 	username = request.args.get('username')
 	list_type_qs = request.args.get('list')
 	
-	query = """select u.email, CASE WHEN u.adminLevel > 2 THEN 'Admin' WHEN u.adminLevel > 1 THEN 'Moderator' ELSE 'Normal User' END as adminLevelText, CASE WHEN u.active then 'Active' else 'Inactive' end as status, u.created_at
+	query = """select u.email, CASE WHEN u.adminLevel >= 2 THEN 'Administrator' WHEN u.adminLevel >= 1 THEN 'Moderator' ELSE 'Normal User' END as adminLevelText, CASE WHEN u.active then 'Active' else 'Inactive' end as status, u.created_at
 				from user u
 				where u.username = %s""";
 	conn = mysql.connection
@@ -40,10 +41,59 @@ def show_user_profile():
 	else: #show posts
 		_a_p = "active"
 		list_html = get_user_posts(username)
+		list_type_qs = "posts"
 	cursor.close()
 
 	return render_template('admin_user_profile.html', username=username, email=user["email"], usertype=user["adminLevelText"],status=user["status"]
-	,registered_on=user["created_at"].strftime("%m/%d/%y %I:%M%p") ,a_p=_a_p, a_c=_a_c, a_r=_a_r, list=list_html)
+	,registered_on=user["created_at"].strftime("%m/%d/%y %I:%M%p") ,a_p=_a_p, a_c=_a_c, a_r=_a_r, list=list_html, list_type=list_type_qs)
+	
+@admin_user_profile.route('/admin/user_profile/make_user_admin',methods=['GET'])
+def make_user_admin():
+	username = request.args.get('username')
+	
+	query = """update user set adminLevel = 2 where username = %s and adminLevel != 2"""
+	conn = mysql.connection
+	cursor = conn.cursor()
+	cursor.execute(query,(username,))
+	result = cursor.fetchone()
+	if (cursor.rowcount > 0):
+		flash('User ' + username + ' is now an administrator!')
+	conn.commit()
+	cursor.close()
+	
+	return show_user_profile()
+	
+@admin_user_profile.route('/admin/user_profile/make_user_mod',methods=['GET'])
+def make_user_moderator():
+	username = request.args.get('username')
+	
+	query = """update user set adminLevel = 1 where username = %s and adminLevel != 1"""
+	conn = mysql.connection
+	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+	cursor.execute(query, (username,))
+	result = cursor.fetchone()
+	if (cursor.rowcount > 0):
+		flash('User ' + username + ' is now a moderator!')
+	conn.commit()
+	cursor.close()
+	
+	return show_user_profile()
+	
+@admin_user_profile.route('/admin/user_profile/make_user_normal',methods=['GET'])
+def make_user_normal():
+	username = request.args.get('username')
+	
+	query = """update user set adminLevel = 0 where username = %s and adminLevel != 0"""
+	conn = mysql.connection
+	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+	cursor.execute(query, (username,))
+	result = cursor.fetchone()
+	if (cursor.rowcount > 0):
+		flash('User ' + username + ' "is now a normal user!')
+	conn.commit()
+	cursor.close()
+	
+	return show_user_profile()
 	
 def get_user_posts(username):
 	post_template_html = open('views/post_template.html', 'r').read()

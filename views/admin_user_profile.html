@@ -20,7 +20,16 @@
 			E-mail Address: {{email}}
 		</div>
 		<div class="col-sm-6">
-			User Type: {{usertype}}
+			User Type: 
+			<div class="dropdown" style="display:inline!important">
+				<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">{{usertype}}
+				<span class="caret"></span></button>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+				  <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('admin_user_profile.make_user_admin')}}?username={{username}}&list={{list_type}}">Administrator</a></li>
+				  <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('admin_user_profile.make_user_moderator')}}?username={{username}}&list={{list_type}}">Moderator</a></li>
+				  <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('admin_user_profile.make_user_normal')}}?username={{username}}&list={{list_type}}">Normal User</a></li>
+				</ul>
+		  </div>
 		</div>
 		<div class="col-sm-6">
 			Status: {{status}}
