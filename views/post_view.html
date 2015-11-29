@@ -65,4 +65,24 @@
 		</div>
 	</div>
 </div>
+<div class="modal fade" id="reportModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="exampleModalLabel">Report Offensive Comment</h4>
+			</div>
+			<div class="modal-body">
+				<form id="newReportForm" method="post" action="{{ url_for('comment.reportComment') }}?postid={{postid}}">
+					<div class="form-group">
+						<!-- Parent Comment ID will be a hidden input filed -->
+						<input type="hidden" name="commentid" value="">
+						<textarea class="form-control" rows="6" id="message-text" name="reportText" placeholder="Reason for Report"></textarea>
+					</div>
+					<button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary">Send Report</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock %}

@@ -18,9 +18,16 @@ $(document).ready(function(){
       var button = $(event.relatedTarget); // Button that triggered the modal
       var modal = $(this);
       var recipient = button.data('id'); // Extract info from data-* attributes
-      console.log(recipient);
       modal.find(".modal-body input[name='parentCommentID']").val(recipient);
       // you can add more attributes here
-  })
+  });
+  
+  $('#reportModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var modal = $(this);
+      var recipient = button.data('id'); // Extract info from data-* attributes
+      modal.find(".modal-body input[name='commentid']").val(recipient);
+      // you can add more attributes here
+  });
 });
 

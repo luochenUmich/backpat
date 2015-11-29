@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<form id="login_form" class="form-horizontal" action="" method="">
+  <div class="form-group form-group-small">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="col-sm-offset-4 col-sm-10">
+            <p class="text-danger">{{ messages[0] }}</p>
+        </div>
+      {% endif %}
+    {% endwith %}
+  </div>
+  <div style="font-size:larger; font-weight:bold;margin-top:3px;margin-bottom:3px; text-align:center">
+	User Content Reports
+  </div>
+  </hr>
+  <ul class="nav nav-tabs">
+    <li  class="{{a_a}}"><a href="{{ url_for('reportlist.show_reports') }}?list=active">Active</a></li>
+    <li class="{{a_i}}"><a href="{{ url_for('reportlist.show_reports') }}?list=inactive">Inactive</a></li>
+  </ul>
+	</hr>
+	{{list|safe}}
+</form>
+{% endblock %}

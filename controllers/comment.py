@@ -51,9 +51,10 @@ def makeComment():
 def reportComment():
 	if not is_logged_in():
 		return render_template('user_login.html')
-	if 'commentid' not in request.args:
-		return json.dumps({'error':'commentid not specified'})
-	commentid = request.args.get('commentid')
+	if 'postid' not in request.args:
+		return json.dumps({'error':'post not specified'})
+	commentid = 0
+	postid = request.args.get('postid')
 	
 	conn = mysql.connection
 	cursor = conn.cursor()
@@ -62,21 +63,20 @@ def reportComment():
 		if ('reportText' not in request.form):
 			return json.dumps({'error':'report notes not specified'})
 			
-		cursor.execute("select top 1 postid from comment where commentid = %s", (commentid,))
-		result = cursor.fetchone()
-		if (cursor.rowcount < 0):
-			return json.dumps({'error':'comment with id ' + commentid + ' does not exist'})
+		if ('commentid' not in request.form):
+			return json.dumps({'error':'comment to report not specified'})
 			
-		postid = int(result['postid'])
 		_reportText = request.form['reportText'] #text of the ban report
+		commentid = request.form['commentid'] #Commentid 
 		
-		if postid and _username and _reportText:
+		if postid and _username and _reportText and commentid:
 			# All Good, let's call MySQL
-			cursor.execute("""insert into report (postid, commentid, reportText, reportedByUsername) values (%s, %s, %s, %s)""", (postid, _parentCommentid, _username, _comment))
+			cursor.execute("""insert into report (postid, commentid, reportText, reportedByUsername) values (%s, %s, %s, %s)""", (postid, commentid, _reportText, _username))
 			reportid = cursor.lastrowid
 			
 			if reportid is not 0:
 				conn.commit()
+				flash('Your report has been submitted successfully! A moderator will review it shortly.')
 				return redirect(url_for('post_view.show_post') + "?postid=" + postid)
 			else:
 				flash('Report could not be created due to SQL error')

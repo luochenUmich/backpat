@@ -57,13 +57,13 @@ def generateUniquename(username, postid, opUsername): #make this work better in 
     
 def generateCommentTree(commentid, postid, opUsername): #Returns the html of the comment tree starting at commentid recursively. If commentid = 0, start with the post itself
 	htmlToReturn = ""
-	query = """select commentid, username, dateCreated, comment from comment where active = 1 and """ + ("COALESCE(parentCommentid, 0) = 0 and postid = %s" if commentid == 0 else "COALESCE(parentCommentid, 0) = %s")
+	query = """select commentid, username, dateCreated, comment 
+					from comment c
+					where active = 1 and """ + ("COALESCE(parentCommentid, 0) = 0 and postid = %s" if commentid == 0 else "COALESCE(parentCommentid, 0) = %s")
 	conn = mysql.connection
 	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
 	id = 0
 	id = postid if commentid == 0 else commentid
-	print(query)
-	print("id == " + str(id))
 	sys.stdout.flush()
 	cursor.execute(query,(str(id),))
 	comments = cursor.fetchall()
@@ -71,6 +71,6 @@ def generateCommentTree(commentid, postid, opUsername): #Returns the html of the
 	for comment in comments:
 		childrenHtml = generateCommentTree(comment["commentid"], postid, opUsername)
 		display = "default" if childrenHtml != "" else "none"
-		htmlToReturn += comment_template_html.format(str(comment["commentid"]), str(comment["comment"]), str(comment["commentid"]), str(id), display,comment["dateCreated"].strftime("%m/%d/%y %I:%M%p"), childrenHtml)
+		htmlToReturn += comment_template_html.format(str(comment["commentid"]), str(comment["comment"]), str(comment["commentid"]), str(id), str(comment["commentid"]), display,comment["dateCreated"].strftime("%m/%d/%y %I:%M%p"), childrenHtml)
 		#htmlToReturn += render_template('comment_template.html', username=generateUniquename(comment["username"], postid, opUsername), dateCreated=str(comment["dateCreated"]), commentid=comment["commentid"], description=comment["comment"], comment_child_html=childrenHtml)
 	return htmlToReturn

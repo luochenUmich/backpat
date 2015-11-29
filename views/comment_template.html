@@ -1,14 +1,19 @@
-<div class="row" id="user{}">
-	<div class="col-sm-8">
-		{{title}}
+<div class="media collapse in" id="comment{}">
+	<div class="media-left">
+		<a href="#">
+			<img class="media-object"
+				 src="https://www.hallaminternet.com/assets/URL-tagging-image-300x240.png"
+				 height="30" width="30" alt="">
+		</a>
 	</div>
-	<div class="col-sm-1">
-		{{uniqname}}
-	</div>
-	<div class="col-sm-1">
-		{{dateCreatedInfo}}
-	</div>
-	<div class="col-sm-1">
-		{{numComments}}
+	<div class="media-body">
+		<h6 class="media-heading" style="font-size:115%">{}</h6>
+		<a href="#" data-toggle="modal" data-target="#commentModal"
+		   data-id="{}" data-parentid="{}" >Reply |</a>
+		<a href="#" data-toggle="modal" data-target="#reportModal"
+		   data-id="{}" >Report |</a>
+		<a class="hide-btn" href="#" style="display:{}">Hide Replies</a>
+		<span> {}</span>
+		{}
 	</div>
 </div>
