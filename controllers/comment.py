@@ -47,3 +47,47 @@ def makeComment():
 		if (cursor):
 			cursor.close()
 	
+@comment.route('/comment/report',methods=['POST'])
+def reportComment():
+	if not is_logged_in():
+		return render_template('user_login.html')
+	if 'commentid' not in request.args:
+		return json.dumps({'error':'commentid not specified'})
+	commentid = request.args.get('commentid')
+	
+	conn = mysql.connection
+	cursor = conn.cursor()
+	try:
+		_username = session['username'] 
+		if ('reportText' not in request.form):
+			return json.dumps({'error':'report notes not specified'})
+			
+		cursor.execute("select top 1 postid from comment where commentid = %s", (commentid,))
+		result = cursor.fetchone()
+		if (cursor.rowcount < 0):
+			return json.dumps({'error':'comment with id ' + commentid + ' does not exist'})
+			
+		postid = int(result['postid'])
+		_reportText = request.form['reportText'] #text of the ban report
+		
+		if postid and _username and _reportText:
+			# All Good, let's call MySQL
+			cursor.execute("""insert into report (postid, commentid, reportText, reportedByUsername) values (%s, %s, %s, %s)""", (postid, _parentCommentid, _username, _comment))
+			reportid = cursor.lastrowid
+			
+			if reportid is not 0:
+				conn.commit()
+				return redirect(url_for('post_view.show_post') + "?postid=" + postid)
+			else:
+				flash('Report could not be created due to SQL error')
+				return redirect(url_for('post_view.show_post') + "?postid=" + postid)
+		else:
+			flash('Enter the required fields')
+			return redirect(url_for('post_view.show_post') + "?postid=" + postid)
+			
+	except Exception as e:
+		flash('Internal server error: ' + str(e))
+		return redirect(url_for('post_view.show_post') + "?postid=" + postid)
+	finally:
+		if (cursor):
+			cursor.close()	
