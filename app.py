@@ -14,6 +14,7 @@ app.register_blueprint(controllers.comment)
 app.register_blueprint(controllers.userlist)
 app.register_blueprint(controllers.admin_user_profile)
 app.register_blueprint(controllers.reportlist)
+app.register_blueprint(controllers.categorylist)
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=3000, debug=True)

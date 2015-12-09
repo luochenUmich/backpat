@@ -7,3 +7,4 @@ from main_2 import *
 from userlist import *
 from admin_user_profile import *
 from reportlist import *
+from categoryList import *
