@@ -32,6 +32,11 @@ def user_login():
 		if hashlib.md5(request.form['password']).hexdigest() != user['password']:
 			flash('Wrong password! Please try again')
 			return render_template('user_login.html', prev_url=request.args.get('url'))
+			
+		#If user is banned, redirect them to you've been banned screen
+		if user['active'] != 1:
+			flash('You have been banned!')
+			return render_template('user_login.html', prev_url=request.args.get('url'))
 
 		# Set up the session
 		session['username'] = request.form['username']

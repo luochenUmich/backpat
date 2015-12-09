@@ -50,7 +50,7 @@ def show_user_profile():
 	cursor.close()
 
 	return render_template('admin_user_profile.html', username=username, email=user["email"], usertype=user["adminLevelText"],status=user["status"]
-	,registered_on=user["created_at"].strftime("%m/%d/%y %I:%M%p") ,a_p=_a_p, a_c=_a_c, a_r=_a_r, list=list_html, list_type=list_type_qs)
+	,registered_on=user["created_at"].strftime("%m/%d/%y %I:%M%p") ,a_p=_a_p, a_c=_a_c, a_r=_a_r, list=list_html, list_type=list_type_qs, ban_button_text=("Ban User" if str(user["status"]) == "Active" else "Unban User") )
 	
 @admin_user_profile.route('/admin/user_profile/make_user_admin',methods=['GET'])
 def make_user_admin():
@@ -115,6 +115,29 @@ def make_user_normal():
 	
 	return show_user_profile()
 	
+@admin_user_profile.route('/admin/user_profile/change_ban_status',methods=['GET'])
+def change_ban_status():
+	if not is_logged_in():
+		return redirect(url_for('user.user_login'))
+	if (getAdminLevel() < 2):
+		flash('You need to be an administrator to access this page')
+		return redirect(url_for('main.main_route'))
+	username = request.args.get('username')
+	print('Changing status of ' + username + '\n')
+	sys.stdout.flush()
+	
+	query = """update user set active = (CASE WHEN active = 0 THEN 1 ELSE 0 END) where username = %s"""
+	conn = mysql.connection
+	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+	cursor.execute(query, (username,))
+	result = cursor.fetchone()
+	if (cursor.rowcount > 0):
+		flash('User ' + username + ' has had their status changed')
+	conn.commit()
+	cursor.close()
+	
+	return redirect(url_for('admin_user_profile.show_user_profile') + "?username=" + username);
+	
 def get_user_posts(username):
 	post_template_html = open('views/post_template.html', 'r').read()
 	htmlToReturn = ""
@@ -141,6 +164,51 @@ def get_user_posts(username):
 def get_user_reports(username):
 	htmlToReturn = ""
 	
+	query = """select r.reportid, c.commentid, c.dateCreated, c.comment, p.summary, r.postid, r.reportText, CASE WHEN r.active = 1 THEN 'Unresolved' ELSE 'Resolved' END as reportStatus
+				from report r
+				left join post p on p.postid = r.postid
+				left join comment c on c.commentid = r.commentid
+				left join user u on c.username = u.username
+				where c.username = %s"""
+		
+	conn = mysql.connection
+	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+	cursor.execute(query, (username,))
+	
+	report_grid_row_html = open('views/report_grid_row_user_profile.html', 'r').read()
+	report = cursor.fetchone()
+	while(report):
+		if(htmlToReturn == ""):
+			htmlToReturn = """<br/><div class="row table_header" style="font-weight:bold;font-size:large">
+								<div class="col-sm-4">
+									Your Comment
+								</div>
+								<div class="col-sm-2">
+									Related Post
+								</div>
+								<div class="col-sm-2">
+									Date Reported
+								</div>
+								<div class="col-sm-2">
+									Report Notes
+								</div>
+								<div class="col-sm-2">
+									Status
+								</div>
+							</div> """
+		htmlToReturn += report_grid_row_html.format(str(report["comment"])
+												, url_for('post_view.show_post') + "?postid" + str(report["postid"])
+												, report["summary"]
+												, report["dateCreated"].strftime("%m/%d/%y %I:%M%p")
+												, report["reportText"]
+												, report["reportStatus"])
+		
+		report = cursor.fetchone()
+	
+	cursor.close()
+	if (htmlToReturn == ""):
+		htmlToReturn = "No current reports match the criteria"
+	
 	return htmlToReturn
 	
 def get_user_comments(username):
@@ -156,5 +224,5 @@ def get_user_comments(username):
 	comments = cursor.fetchall()
 	cursor.close()
 	for comment in comments:
-		htmlToReturn += template_comment_row.format(str(comment["comment"]), url_for('post_view.show_post') + "?postid" + str(comment["postid"]), comment["summary"], comment["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
+		htmlToReturn += template_comment_row.format(str(comment["comment"]), url_for('post_view.show_post') + "?postid=" + str(comment["postid"]), comment["summary"], comment["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
 	return htmlToReturn

@@ -26,8 +26,7 @@ def show_post():
 	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
 	cursor.execute("""select username, summary, description, dateCreated, dateLastModified
                     from post p
-                    where postid = %s
-					limit 1""", (postid))
+                    where postid = %s""", (str(postid),))
 	post = cursor.fetchone()
 	cursor.close()
 	if not post:

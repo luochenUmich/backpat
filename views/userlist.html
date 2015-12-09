@@ -11,14 +11,26 @@
       {% endif %}
     {% endwith %}
   </div>
-  <div class="row post">
-		<div class="col-sm-12" style="font-size:larger; font-weight:bold;border-bottom:1px solid black;margin-top:3px;margin-bottom:3px">
-			Users
+  <div class="row">
+	<div class="col-sm-12" style="font-size:x-large; text-align:center; font-weight:bold">
+		Users
+	</div>
+  </div>
+  <div class="row post" style="font-size:larger; font-weight:bold;border-bottom:1px solid black;margin-top:3px;margin-bottom:3px">
+		<div class="col-sm-4">
+			User Profile
 		</div>
-		<div class="col-sm-12" style="margin-top:3px">
-			{{user_list|safe}}
+		<div class="col-sm-4">
+			Date
+		</div>
+		<div class="col-sm-2">
+			User Type
+		</div>
+		<div class="col-sm-2">
+			Status
 		</div>
 	</div>
+	{{user_list|safe}}
 </form>
 {% endblock %}
 

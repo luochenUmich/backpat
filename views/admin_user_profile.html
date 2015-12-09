@@ -1,6 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-<form id="login_form" class="form-horizontal" action="" method="">
+	<style type="text/css" >
+		.gridHeaderRow {
+			font-size:larger; font-weight:bold;
+			padding-bottom:5px;
+		}
+		.infoTable{
+			border-radius:5px;
+			border:1px solid gray;
+			padding:10px;
+			margin:10px;
+		}
+		.dropdown{
+			height:20px
+		}
+	</style>
   <div class="form-group form-group-small">
     {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -10,37 +24,40 @@
       {% endif %}
     {% endwith %}
   </div>
-  <div style="font-size:larger; font-weight:bold;margin-top:3px;margin-bottom:3px; text-align:center">
+  <div style="font-size:x-large; font-weight:bold;margin-top:3px;margin-bottom:3px; text-align:center">
 	User Information for {{username}}
   </div>
-  </hr>
-  <div class="row">
-	<div class="row" style="font-size:larger; font-weight:bold;">
-		<div class="col-sm-6">
-			E-mail Address: {{email}}
+  <div class="form-group infoTable" >
+	  <div class="row  gridHeaderRow">
+			<div class="col-sm-6">
+				E-mail Address: {{email}}
+			</div>
+			<div class="col-sm-6">
+				User Type: 
+				<div class="dropdown" style="display:inline!important;">
+					<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">{{usertype}}
+					<span class="caret"></span></button>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('admin_user_profile.make_user_admin')}}?username={{username}}&list={{list_type}}">Administrator</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('admin_user_profile.make_user_moderator')}}?username={{username}}&list={{list_type}}">Moderator</a></li>
+					  <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('admin_user_profile.make_user_normal')}}?username={{username}}&list={{list_type}}">Normal User</a></li>
+					</ul>
+			  </div>
+			</div>
 		</div>
-		<div class="col-sm-6">
-			User Type: 
-			<div class="dropdown" style="display:inline!important">
-				<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">{{usertype}}
-				<span class="caret"></span></button>
-				<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-				  <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('admin_user_profile.make_user_admin')}}?username={{username}}&list={{list_type}}">Administrator</a></li>
-				  <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('admin_user_profile.make_user_moderator')}}?username={{username}}&list={{list_type}}">Moderator</a></li>
-				  <li role="presentation"><a role="menuitem" tabindex="-1" href="{{url_for('admin_user_profile.make_user_normal')}}?username={{username}}&list={{list_type}}">Normal User</a></li>
-				</ul>
-		  </div>
+		<div class="row gridHeaderRow">
+			<div class="col-sm-6">
+				Registered On: {{registered_on}}
+			</div>
+			<div class="col-sm-6">
+				<form id="ban_form" method="get" action="{{ url_for('admin_user_profile.change_ban_status') }}">
+					<input type="hidden" name="username" value="{{username}}">
+					
+					</input>
+					Status: {{status}} <button type="submit" class="btn btn-default">{{ban_button_text}}</button>
+				</form>
+			</div>
 		</div>
-		<div class="col-sm-6">
-			Status: {{status}}
-		</div>
-		<div class="col-sm-6">
-			Registered On: {{registered_on}}
-		</div>
-	</div>
-	<div class="row" style="font-size:larger; font-weight:bold;">
-		
-	</div>
   </div>
   <ul class="nav nav-tabs">
     <li  class="{{a_p}}"><a href="{{ url_for('admin_user_profile.show_user_profile') }}?username={{username}}&list=posts">Posts</a></li>
@@ -49,5 +66,4 @@
   </ul>
 	</hr>
 	{{list|safe}}
-</form>
 {% endblock %}

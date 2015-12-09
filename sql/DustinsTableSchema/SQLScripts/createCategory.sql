@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS `mydb`.`category` (
-  `categoryid` INT NOT NULL COMMENT '',
-  `categoryName` VARCHAR(100) NOT NULL COMMENT '',
-  `active` TINYINT(1) DEFAULT 1 COMMENT '',
-  `dateCreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '',
-  `createdByUsername` VARCHAR(20) NULL COMMENT '',
-  PRIMARY KEY (`categoryid`)  COMMENT '',
-  INDEX `createdByUsername_idx` (`createdByUsername` ASC)  COMMENT '',
+  `categoryid` INT NOT NULL ,
+  `categoryName` VARCHAR(100) NOT NULL ,
+  `active` TINYINT(1) DEFAULT 1 ,
+  `dateCreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
+  `createdByUsername` VARCHAR(20) NULL ,
+  PRIMARY KEY (`categoryid`) ,
+  INDEX `createdByUsername_idx` (`createdByUsername` ASC),
   CONSTRAINT `createdByUsername`
     FOREIGN KEY (`createdByUsername`)
     REFERENCES `mydb`.`user` (`username`)
