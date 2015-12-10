@@ -29,5 +29,20 @@ $(document).ready(function(){
       modal.find(".modal-body input[name='commentid']").val(recipient);
       // you can add more attributes here
   });
+  
+  $('#categoryDropDownPostCreate.dropdown-menu li').click(function() {
+
+		var $target = $( this );
+	 
+		$target.closest( '.dropdown' )
+		  .find( '[data-bind="label"]' ).text( $target.text() )
+			 .end()
+		  .children( '.dropdown-toggle' ).dropdown( 'toggle' );
+		  
+		$('#categoryDropdownValue').val($target.val());
+		
+	   return false;
+	 
+	});
 });
 

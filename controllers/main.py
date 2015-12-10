@@ -25,4 +25,19 @@ def main_route():
 		#htmlToReturn += render_template('post_template.html', postid=post["postid"], title=post["summary"], description=post["description"],dateInfo=_dateInfo)
 		post = cursor.fetchone()
 	cursor.close()
-	return render_template('index.html', Posts=htmlToReturn)
+	return render_template('index.html', Posts=htmlToReturn, categories=getCategories())
+
+def getCategories():
+	categories = ""
+	query = """select categoryid, categoryName
+				from category
+				where active = 1 order by categoryName""";
+	conn = mysql.connection
+	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+	cursor.execute(query)
+	category = cursor.fetchone()
+	while(category):
+		categories += ("""<li role="presentation" value=\"""" + str(category["categoryid"]) + """""><a role="menuitem" tabindex="-1" href="#">""" + category["categoryName"] + """</a></li>""")
+		category = cursor.fetchone()
+	cursor.close()
+	return categories

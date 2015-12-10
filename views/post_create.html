@@ -1,6 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
 	<h1>New Post</h1>
+	<script type="text/javascript">
+		$( document.body ).on( 'click', '.dropdown-menu li', function( event ) {
+ 
+		   var $target = $( event.currentTarget );
+		 
+		   $target.closest( '.dropdown' )
+			  .find( '[data-bind="label"]' ).text( $target.text() )
+				 .end()
+			  .children( '.dropdown-toggle' ).dropdown( 'toggle' );
+			  
+			$("#categoryDropdownValue").val($target.val());
+		 
+		   return false;
+		 
+		});
+	</script>
 	<form class="form-horizontal" method="post" action="{{ url_for('post_create.create') }}" >
       <div class="form-group">
         <label for="summary" class="col-sm-2 control-label">Title:</label>
@@ -14,6 +30,20 @@
           <textarea rows="6" type="password" class="form-control" id="description" required name="_description" placeholder="Description"></textarea>
         </div>
       </div>
+	  <div class="form-group">
+		<label for="description" class="col-sm-2 control-label">Category:</label>
+        <div class="col-sm-5">
+          <div class="dropdown" style="display:inline!important;">
+				<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+					<span data-bind="label">Select a Category</span><span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+					{{categories}}
+				</ul>
+		  </div>
+        </div>
+		<input type="hidden" id="categoryDropdownValue" >  </input>
+	  </div>
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-3">
           <button type="submit" class="btn btn-default">Post</button>
