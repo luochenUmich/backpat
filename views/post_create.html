@@ -1,22 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 	<h1>New Post</h1>
-	<script type="text/javascript">
-		$( document.body ).on( 'click', '.dropdown-menu li', function( event ) {
- 
-		   var $target = $( event.currentTarget );
-		 
-		   $target.closest( '.dropdown' )
-			  .find( '[data-bind="label"]' ).text( $target.text() )
-				 .end()
-			  .children( '.dropdown-toggle' ).dropdown( 'toggle' );
-			  
-			$("#categoryDropdownValue").val($target.val());
-		 
-		   return false;
-		 
-		});
-	</script>
 	<form class="form-horizontal" method="post" action="{{ url_for('post_create.create') }}" >
       <div class="form-group">
         <label for="summary" class="col-sm-2 control-label">Title:</label>

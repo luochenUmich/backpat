@@ -58,7 +58,7 @@
 				<h4 class="modal-title" id="exampleModalLabel">New Comment</h4>
 			</div>
 			<div class="modal-body">
-				<form id="newCommentForm" method="post" action="{{ url_for('comment.makeComment') }}?postid={{postid}}">
+				<form id="newCommentForm" method="post" action="{{ url_for('comment.makeComment') }}?postid={{postid}}" onsubmit="disablePostButton($(this));">
 					<div class="form-group">
 						<!-- Parent Comment ID will be a hidden input filed -->
 						<input type="hidden" name="parentCommentID" value="">
@@ -78,7 +78,7 @@
 				<h4 class="modal-title" id="exampleModalLabel">Report Offensive Comment</h4>
 			</div>
 			<div class="modal-body">
-				<form id="newReportForm" method="post" action="{{ url_for('comment.reportComment') }}?postid={{postid}}">
+				<form id="newReportForm" method="post" action="{{ url_for('comment.reportComment') }}?postid={{postid}}" onsubmit="disablePostButton($(this));">
 					<div class="form-group">
 						<!-- Parent Comment ID will be a hidden input filed -->
 						<input type="hidden" name="commentid" value="">
@@ -91,4 +91,9 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	function disablePostButton(jqueryObjectCalledFrom){
+		jqueryObjectCalledFrom.find('button.btn.btn-primary').attr('disabled', 'true');
+	}
+</script>
 {% endblock %}
