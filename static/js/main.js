@@ -53,5 +53,20 @@ $(document).ready(function () {
         var selected_tab = $(this).find("a").attr("href");
         $(selected_tab).show();
     });
+	
+	$('#categoryDropDownFilter.dropdown-menu li').click(function() {
+		var $target = $( this );
+	 
+		$target.closest( '.dropdown' )
+		  .find( '[data-bind="label"]' ).text( $target.text() )
+			 .end()
+		  .children( '.dropdown-toggle' ).dropdown( 'toggle' );
+		  
+		$('#categoryFilterValue').val($target.val());
+	 
+		document.getElementById("mainForm").submit();
+		
+		return false;
+	});
 });
 

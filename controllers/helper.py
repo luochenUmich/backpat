@@ -19,3 +19,17 @@ def getAdminLevel():
 		return int(session.get('adminLevel'))
 	else:
 		return 0
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+		
+def is_int(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
