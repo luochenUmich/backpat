@@ -1,16 +1,16 @@
-$(document).ready(function(){
-    $('.comment-button').click(function(){
+$(document).ready(function () {
+    $('.comment-button').click(function () {
         $(this).parent().next('.comment-child').slideToggle();
-         return false;
+        return false;
     });
 
-    $('.hide-btn').click(function(){
+    $('.hide-btn').click(function () {
         if ($(this).text() === "Hide Replies") {
             $(this).text("Show Replies");
-			$(this).siblings('.media.collapse').slideToggle();
-        } else if ($(this).text() === "Show Replies"){
+            $(this).siblings('.media.collapse').slideToggle();
+        } else if ($(this).text() === "Show Replies") {
             $(this).text("Hide Replies");
-			$(this).siblings('.media.collapse').slideToggle();
+            $(this).siblings('.media.collapse').slideToggle();
         }
     });
 
@@ -30,7 +30,7 @@ $(document).ready(function(){
       // you can add more attributes here
   });
   
-  $('#categoryDropDownPostCreate.dropdown-menu li').click(function() {
+    $('#categoryDropDownPostCreate.dropdown-menu li').click(function() {
 
 		var $target = $( this );
 	 
@@ -44,5 +44,14 @@ $(document).ready(function(){
 	   return false;
 	 
 	});
+
+    $("#profile_tab li").click(function () {
+        $("#profile_tab li").removeClass('active');
+        $(this).addClass('active');
+
+        $('.tab_content').hide();
+        var selected_tab = $(this).find("a").attr("href");
+        $(selected_tab).show();
+    });
 });
 

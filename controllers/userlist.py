@@ -21,7 +21,7 @@ def show_users():
 		return redirect(url_for('main.main_route'))
 	user_row_template_html = open('views/user_grid_row.html', 'r').read()
 	htmlToReturn = ""
-	query = """select u.username, u.email, CASE WHEN u.adminLevel > 2 THEN 'Admin' WHEN u.adminLevel > 1 THEN 'Moderator' ELSE 'Normal User' END as adminLevelText, CASE WHEN u.active then 'Active' else 'Inactive' end as activeStatus
+	query = """select u.username, u.email, CASE WHEN u.adminLevel >= 2 THEN 'Admin' WHEN u.adminLevel >= 1 THEN 'Moderator' ELSE 'Normal User' END as adminLevelText, CASE WHEN u.active then 'Active' else 'Inactive' end as activeStatus
 				from user u
 				order by username""";
 	conn = mysql.connection

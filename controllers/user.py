@@ -76,6 +76,7 @@ def user_register():
 		conn.commit()
 
 		session['username'] = request.form['username']
+		session['adminlevel'] = 0
 		return redirect(url_for('main.main_route'))
 
 @user.route('/profile', methods=['GET'])
@@ -83,12 +84,32 @@ def user_profile():
 	if 'username' not in session:
 		return render_template('user_login.html')
 	else:
-		# Check if user exists and if password is correct
+		query = """select u.email, CASE WHEN u.adminLevel >= 2 THEN 'Administrator' WHEN u.adminLevel >= 1 THEN 'Moderator' ELSE 'Normal User' END as adminLevelText, CASE WHEN u.active then 'Active' else 'Inactive' end as status, u.created_at
+				from user u
+				where u.username = %s"""
 		conn = mysql.connection
 		cur = conn.cursor(MySQLdb.cursors.DictCursor)
-		cur.execute("SELECT * FROM POST WHERE USERNAME='%s'" % session['username'])
+		cur.execute(query, (session['username'],))
+		user = cur.fetchone()
+
+		query = """select p.postid, summary, description, dateCreated, dateLastModified, nc.ct
+				from post p
+				left join (select COUNT(*) as ct, postid from comment where active = 1 group by postid) nc on nc.postid = p.postid
+				where p.active = 1 and username = %s order by dateCreated desc, dateLastModified, summary"""
+		cur.execute(query, (session['username'],))
 		posts = cur.fetchall()
-		return render_template('user_profile.html', posts=posts)
+		for post in posts:
+			post['dataCreated'] = str(post["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
+
+		query = """select c.commentid, c.dateCreated, c.comment, p.summary, c.postid
+				from comment c
+				left join post p on p.postid = c.postid
+				where c.username = %s"""
+		cur.execute(query, (session['username'],))
+		comments = cur.fetchall()
+		for comment in comments:
+			comment['dataCreated'] = str(comment["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
+		return render_template('user_profile.html', username=session['username'], registered_on=user['created_at'], adminLevel=user['adminLevelText'], email=user['email'], status=user['status'], posts=posts, comments=comments)
 
 @user.route('/user/delete', methods=['GET'])
 def user_delete():

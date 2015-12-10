@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+    <style type="text/css">
+        .gridHeaderRow {
+            font-size: larger;
+            font-weight: bold;
+            padding-bottom: 5px;
+        }
+
+        .infoTable {
+            border-radius: 5px;
+            border: 1px solid gray;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        .dropdown {
+            height: 20px
+        }
+    </style>
+    <div class="form-group form-group-small">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="col-sm-offset-4 col-sm-10">
+                    <p class="text-danger">{{ messages[0] }}</p>
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div style="font-size:x-large; font-weight:bold;margin-top:3px;margin-bottom:3px; text-align:center">
+        User Profile for {{ username }}
+    </div>
+    <div class="form-group infoTable">
+        <div class="row  gridHeaderRow">
+            <div class="col-sm-6">
+                E-mail Address: {{ email }}
+            </div>
+            <div class="col-sm-6">
+                User Type: {{ adminLevel }}
+            </div>
+        </div>
+        <div class="row gridHeaderRow">
+            <div class="col-sm-6">
+                Registered On: {{ registered_on }}
+            </div>
+            <div class="col-sm-6">
+                Status: {{ status }}
+            </div>
+        </div>
+    </div>
+    <ul class="nav nav-tabs" id="profile_tab">
+        <li role="presentation" class="active"><a href="#post_tab">Posts</a>
+        </li>
+        <li role="presentation"><a href="#comment_tab">Comments</a>
+        </li>
+    </ul>
+    <div id="post">
+
+        <div>
+            <div id="post_tab" class="tab_content" style="display: block;">
+                {% for post in posts %}
+                    <div class="row post" style="border:1px solid black;">
+                        <div class="row postHeader">
+                            <div class="col-sm-9">
+                                <div style="font-weight:bold; font-size:120%">
+                                    <a href="/post/view?postid={{ post.postid }}">{{ post.summary }}</a>
+                                </div>
+                                <div style="overflow-x:hidden;width:100%;">
+                                    {{ post.description }}
+                                </div>
+                            </div>
+                            <div class="col-sm-2" style="text-align:center">
+                                {{ post.dataCreated }}
+                            </div>
+                            <div class="col-sm-1" style="text-align:center">
+                                {{ post.ct }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="comment_tab" class="tab_content" style="display: none;">
+                {% for comment in comments %}
+                    <div class="row">
+                        <div class="col-sm-7">
+                            {{ comment.comment }}
+                        </div>
+                        <div class="col-sm-3">
+                            <a href="/post/view?postid={{ comment.postid }}">{{ comment.summary }}</a>
+                        </div>
+                        <div class="col-sm-2">
+                            {{ comment.dataCreated }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+{% endblock %}
