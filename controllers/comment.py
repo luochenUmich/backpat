@@ -25,7 +25,7 @@ def makeComment():
 		_parentCommentid = int(sanitize(request.form['parentCommentID'])) #Make 0 to be reply to post	
 		# validate the received values
 		#print("\n" + str(postid) + " " + _username + " " + _comment + " " + _parentCommentid + "\n")
-		if postid and _username and _comment and _parentCommentid:
+		if postid and _username and _comment and _parentCommentid != None:
 			# All Good, let's call MySQL
 			cursor.execute("""insert into comment (postid, parentCommentid, username, comment) values (%s, %s, %s, %s)""", (postid, _parentCommentid, _username, _comment))
 			commentid = cursor.lastrowid
