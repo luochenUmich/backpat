@@ -21,7 +21,7 @@ def main_route():
 				where p.active = 1 """
 	
 	if ('_categoryidFilter' in request.form and is_int(request.form['_categoryidFilter'])):
-		_categoryIdFilter = int(request.form['_categoryidFilter'])
+		_categoryIdFilter = int(sanitize(request.form['_categoryidFilter']))
 		if (_categoryIdFilter == -1):
 			query += " and c.categoryid is null "
 			_categoryFilterName = "None"

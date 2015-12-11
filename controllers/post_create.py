@@ -20,8 +20,8 @@ def create():
 		return render_template('user_login.html')
 
 	_username = session['username'] #TD: Add in login function/check
-	_summary = request.form['_summary']
-	_description = request.form['_description']
+	_summary = sanitize(request.form['_summary'])
+	_description = sanitize(request.form['_description'])
 	_categoryid = 0
 	if ('_categoryid' in request.form):
 		_categoryid = request.form['_categoryid']

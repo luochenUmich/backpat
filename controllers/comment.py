@@ -19,10 +19,10 @@ def makeComment():
 		_username = session['username'] #TD: Add in login function/check
 		if ('comment' not in request.form):
 			return json.dumps({'error':'comment text not specified'})
-		if ('parentCommentID' not in request.form):
+		if ('parentCommentID' not in request.form or not is_int(request.form['parentCommentID'])):
 			return json.dumps({'error':'parentCommentID not specified'})
-		_comment = request.form['comment'] #text of the comment
-		_parentCommentid = request.form['parentCommentID'] #Make 0 to be reply to post	
+		_comment = sanitize(request.form['comment']) #text of the comment
+		_parentCommentid = int(sanitize(request.form['parentCommentID'])) #Make 0 to be reply to post	
 		# validate the received values
 		#print("\n" + str(postid) + " " + _username + " " + _comment + " " + _parentCommentid + "\n")
 		if postid and _username and _comment and _parentCommentid:
@@ -60,14 +60,14 @@ def reportComment():
 	cursor = conn.cursor()
 	try:
 		_username = session['username'] 
-		if ('reportText' not in request.form):
+		if ('reportText' not in request.form ):
 			return json.dumps({'error':'report notes not specified'})
 			
-		if ('commentid' not in request.form):
+		if ('commentid' not in request.form  or not is_int(request.form['commentid'])):
 			return json.dumps({'error':'comment to report not specified'})
 			
-		_reportText = request.form['reportText'] #text of the ban report
-		commentid = request.form['commentid'] #Commentid 
+		_reportText = sanitize(request.form['reportText']) #text of the ban report
+		commentid = int(sanitize(request.form['commentid'])) #Commentid 
 		
 		if postid and _username and _reportText and commentid:
 			# All Good, let's call MySQL

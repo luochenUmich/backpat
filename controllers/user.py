@@ -22,14 +22,14 @@ def user_login():
 		# Check if user exists and if password is correct
 		conn = mysql.connection
 		cur = conn.cursor(MySQLdb.cursors.DictCursor)
-		cur.execute("SELECT * FROM user WHERE USERNAME='%s'" % request.form['username'])
+		cur.execute("SELECT * FROM user WHERE USERNAME='%s'" % sanitize(request.form['username']))
 		user = cur.fetchone()
 		if user is None:
 			flash('Username does not exist!')
 			return render_template('user_login.html')
 
 		# Forget password or password is not correct
-		if hashlib.md5(request.form['password']).hexdigest() != user['password']:
+		if hashlib.md5(sanitize(request.form['password'])).hexdigest() != user['password']:
 			flash('Wrong password! Please try again')
 			return render_template('user_login.html', prev_url=request.args.get('url'))
 			
@@ -39,7 +39,7 @@ def user_login():
 			return render_template('user_login.html', prev_url=request.args.get('url'))
 
 		# Set up the session
-		session['username'] = request.form['username']
+		session['username'] = sanitize(request.form['username'])
 		session['adminLevel'] = user['adminLevel']
 		return redirect(url_for('main.main_route'))
 
@@ -55,27 +55,27 @@ def user_register():
 		return render_template('user_register.html')
 	else:
 		# check if two passwords match
-		if (request.form['password'] != request.form['password_confirm']):
+		if (sanitize(request.form['password']) != sanitize(request.form['password_confirm'])):
 			flash("Password must match!")
 			return render_template('user_register.html')
 
 		# check if username already exists
 		conn = mysql.connection
 		cur = conn.cursor(MySQLdb.cursors.DictCursor)
-		cur.execute("SELECT * FROM user WHERE USERNAME='%s'" % request.form['username'])
+		cur.execute("SELECT * FROM user WHERE USERNAME='%s'" % sanitize(request.form['username']))
 		res = cur.fetchall()
 		if (len(res) >= 1):
 			flash('Username already exists!')
 			return render_template('user_register.html')
 
 		# insert the user to database
-		password_hash = hashlib.md5(request.form['password']).hexdigest()
+		password_hash = hashlib.md5(sanitize(request.form['password'])).hexdigest()
 		cur.execute("INSERT INTO user (USERNAME, PASSWORD, EMAIL, ADMINLEVEL) "
-					"VALUES ('%s', '%s', '%s', 0)" % (request.form['username'],
-					password_hash, request.form['email']))
+					"VALUES ('%s', '%s', '%s', 0)" % (sanitize(request.form['username']),
+					password_hash, sanitize(request.form['email'])))
 		conn.commit()
 
-		session['username'] = request.form['username']
+		session['username'] = sanitize(request.form['username'])
 		session['adminlevel'] = 0
 		return redirect(url_for('main.main_route'))
 
