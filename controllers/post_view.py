@@ -24,8 +24,9 @@ def show_post():
 	postid = request.args.get('postid')
 	conn = mysql.connection
 	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
-	cursor.execute("""select username, summary, description, dateCreated, dateLastModified
+	cursor.execute("""select p.username, p.summary, p.description, p.dateCreated, p.dateLastModified, c.categoryName
                     from post p
+					left join category c on p.categoryid = c.categoryid
                     where postid = %s""", (str(postid),))
 	post = cursor.fetchone()
 	cursor.close()
@@ -46,7 +47,7 @@ def show_post():
 	#name = generateUniquename(opUsername, postid, opUsername)
     
     #post_html = render_template('post_view_post_template.html', title=post["summary"], uniqname=name, dateCreatedInfo=dateInfo, numComments=post["numComments"], description=post["comments"])
-	return render_template('post_view.html', title=post["summary"], dateCreatedInfo=dateInfo, description=str(post["description"]),  postid=str(postid), comment_section=comment_html)
+	return render_template('post_view.html', title=post["summary"], dateCreatedInfo=dateInfo, description=str(post["description"]),  postid=str(postid), comment_section=comment_html, category = post["categoryName"])
    
 def generateUniquename(username, postid, opUsername): #make this work better in future
     name = "uniqueName" + str(username) + "-" + str(postid)

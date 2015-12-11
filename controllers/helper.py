@@ -1,4 +1,5 @@
 from flask import session, flash
+from bs4 import BeautifulSoup
 import datetime
 
 def destroy_session():
@@ -19,3 +20,30 @@ def getAdminLevel():
 		return int(session.get('adminLevel'))
 	else:
 		return 0
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+		
+def is_int(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+VALID_TAGS = ['strong', 'em', 'p', 'ul', 'li', 'br']
+
+#Returns the contents, sanitized of invalid html tags
+def sanitize(value):
+
+    soup = BeautifulSoup(value)
+
+    for tag in soup.findAll(True):
+        if tag.name not in VALID_TAGS:
+            tag.extract()
+
+    return soup.renderContents()

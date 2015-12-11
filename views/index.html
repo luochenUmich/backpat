@@ -7,33 +7,46 @@
         {% endif %}
     {% endwith %}
 
+	<form id="mainForm" class="form-horizontal" method="post" action="{{ url_for('main.main_route') }}">
+		<div class="row">
+			<div class="col-sm-12">
+				<h1>Current Posts
+					{% if session.username %}
+						<a style="float:right" class="btn btn-lg btn-primary center-block" data-toggle="modal"
+						   data-target="#postModal"> Post
+						</a>
+					{% endif %}
+				</h1>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <h1>Current Posts
-                {% if session.username %}
-                    <a style="float:right" class="btn btn-lg btn-primary center-block" data-toggle="modal"
-                       data-target="#postModal"> Post
-                    </a>
-                {% endif %}
-            </h1>
-
-            <div class="row postHeader" style="font-weight:bold;font-size:120%">
-                <div class="col-sm-9">
-                    Title/Description
-                </div>
-                <div class="col-sm-2" style="text-align:center">
-                    Date Created
-                </div>
-                <div class="col-sm-1" style="text-align:center">
-                    Comments
-                </div>
-            </div>
-            {{ Posts|safe }}
-        </div>
-    </div>
-
-
+				<div class="row postHeader" style="font-weight:bold;font-size:120%">
+					<div class="col-sm-6">
+						Title/Description
+					</div>
+					<div class="col-sm-3" style="text-align:center">
+						<label for="description" class="control-label">Category:</label>
+						<div class="dropdown" style="display:inline!important;">
+								<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+									<span data-bind="label">{{_categoryFilterName}}</span><span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" id="categoryDropDownFilter">
+									<li role="presentation" value="0"><a role="menuitem" tabindex="-1" href="#">Show All</a></li>
+									<li role="presentation" value="-1"><a role="menuitem" tabindex="-1" href="#">None</a></li>
+									{{categories|safe}}
+								</ul>
+								<input type="hidden" id="categoryFilterValue" name="_categoryidFilter" value="{{_categoryidFilter}}">  </input>
+						</div>
+					</div>
+					<div class="col-sm-2" style="text-align:center">
+						Date
+					</div>
+					<div class="col-sm-1" style="text-align:center">
+						Replies
+					</div>
+				</div>
+				{{ Posts|safe }}
+			</div>
+		</div>
+	</form>
     <!-- Post Modal -->
     <div class="modal fade" id="postModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -42,23 +55,40 @@
                     <h4 class="modal-title" id="exampleModalLabel">New Post</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{{ url_for('post_create.create') }}">
+                    <form id="postCreateForm" method="post" action="{{ url_for('post_create.create') }}" onsubmit="disablePostButton()">
                         <div class="form-group">
                             <label for="summary" class="control-label">Title:</label>
                             <input type="text" class="form-control" required id="summary"
                                    maxlength="20" name="_summary" placeholder="Title">
                         </div>
+						<div class="form-group">
+							<label for="description" class="control-label">Category:</label>
+							<div class="dropdown" style="display:inline!important;">
+									<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+										<span data-bind="label">Select a Category</span><span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" id="categoryDropDownPostCreate">
+										{{categories|safe}}
+									</ul>
+									<input type="hidden" id="categoryDropdownValue" name="_categoryid">  </input>
+							</div>
+						 </div>
                         <div class="form-group">
                             <label for="description" class="control-label">Description:</label>
                             <textarea rows="6" class="form-control" id="description" required
                                       name="_description" placeholder="Description"></textarea>
                         </div>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Post</button>
+                        <button id="postButton" type="submit" class="btn btn-primary" onclick="">Post</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
+	<script type="text/javascript">
+		function disablePostButton(){
+			document.getElementById("postCreateForm").submit();
+			$('#postButton').attr('disabled', 'true');
+		}
+	</script>
 {% endblock %}

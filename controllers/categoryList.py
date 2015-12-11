@@ -81,10 +81,10 @@ def update_category():
 	if ('list' not in request.form):
 		return redirect(url_for('categorylist.show_categories'))
 	list_type_qs = request.form['list']
-	if ('categoryid' not in request.form or '_categoryName' not in request.form):
+	if ('categoryid' not in request.form or not is_int(request.form['categoryid']) or '_categoryName' not in request.form):
 		return redirect(url_for('categorylist.show_categories') + "?list=" + list_type_qs)
-	categoryid = request.form['categoryid']
-	categoryName = request.form['_categoryName']
+	categoryid = int(request.form['categoryid'])
+	categoryName = sanitize(request.form['_categoryName'])
 	
 	conn = mysql.connection
 	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
