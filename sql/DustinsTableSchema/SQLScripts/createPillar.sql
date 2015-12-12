@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS `mydb`.`pillar` (
-  `username` VARCHAR(20) NOT NULL COMMENT '',
-  `supportUsername` VARCHAR(20) NOT NULL COMMENT '',
-  `dateCreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '',
-  PRIMARY KEY (`supportUsername`, `username`)  COMMENT '',
-  INDEX `username_idx` (`username` ASC)  COMMENT '',
+  `username` VARCHAR(20) NOT NULL ,
+  `supportUsername` VARCHAR(20) NOT NULL,
+  `dateCreated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`supportUsername`, `username`),
+  INDEX `username_idx` (`username` ASC),
   CONSTRAINT `username`
     FOREIGN KEY (`username`)
     REFERENCES `mydb`.`user` (`username`)
