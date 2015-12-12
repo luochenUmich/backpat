@@ -91,6 +91,42 @@
 		</div>
 	</div>
 </div>
+<div class="modal fade" id="pillarRequestModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="exampleModalLabel">Pillar Request</h4>
+			</div>
+			<div class="modal-body">
+				<form id="pillarRequestForm" method="post" action="{{ url_for('pillar_request.create') }}" onsubmit="disablePostButton($(this));">
+					<!-- Parent Comment ID will be a hidden input filed -->
+					<input type="hidden" name="_commentidOfOtherUser" value="">
+					<input type="hidden" name="_postidOfOtherUser" value="">
+					<input type="hidden" name="_emailOfOtherUser" value="">
+					<input type="hidden" name="_pillarRequestTypeDropdownVal" value="0" id="#_pillarRequestTypeDropdownVal">
+					<div class="form-group">
+						<div class="dropdown" style="display:inline!important;">
+							<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+								<span data-bind="label">Request to be their Support</span><span class="caret"></span>
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" id="pillarRequestTypeDropdown">
+							  <li role="presentation" value="0"><a role="menuitem" tabindex="-1" href="{{url_for('admin_user_profile.make_user_admin')}}?username={{username}}&list={{list_type}}">Request to be their Support</a></li>
+							  <li role="presentation" value="1"><a role="menuitem" tabindex="-1" href="{{url_for('admin_user_profile.make_user_moderator')}}?username={{username}}&list={{list_type}}">Request their Support</a></li>
+							  <li role="presentation" value="2"><a role="menuitem" tabindex="-1" href="{{url_for('admin_user_profile.make_user_normal')}}?username={{username}}&list={{list_type}}">Both</a></li>
+							</ul>
+					    </div>
+					</div>
+					<div class="form-group">
+						Reason:<textarea class="form-control" rows="6" id="message-text" name="_reason" placeholder="Reason for Pillar Request"></textarea>
+					</div>
+					<button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary">Send Request</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 <script type="text/javascript">
 	function disablePostButton(jqueryObjectCalledFrom){
 		jqueryObjectCalledFrom.find('button.btn.btn-primary').attr('disabled', 'true');

@@ -71,6 +71,6 @@ def generateCommentTree(commentid, postid, opUsername): #Returns the html of the
 	for comment in comments:
 		childrenHtml = generateCommentTree(comment["commentid"], postid, opUsername)
 		display = "default" if childrenHtml != "" else "none"
-		htmlToReturn += comment_template_html.format(str(comment["commentid"]), str(comment["comment"]), str(comment["commentid"]), str(id), str(comment["commentid"]), display,comment["dateCreated"].strftime("%m/%d/%y %I:%M%p"), childrenHtml)
+		htmlToReturn += comment_template_html.format(str(comment["commentid"]), str(comment["comment"]), str(comment["commentid"]), str(id), str(comment["commentid"]), display,comment["dateCreated"].strftime("%m/%d/%y %I:%M%p"),str(comment["commentid"]),childrenHtml)
 		#htmlToReturn += render_template('comment_template.html', username=generateUniquename(comment["username"], postid, opUsername), dateCreated=str(comment["dateCreated"]), commentid=comment["commentid"], description=comment["comment"], comment_child_html=childrenHtml)
 	return htmlToReturn

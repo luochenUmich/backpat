@@ -30,7 +30,18 @@ $(document).ready(function () {
       // you can add more attributes here
   });
   
-    $('#categoryDropDownPostCreate.dropdown-menu li').click(function() {
+   $('#pillarRequestModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var modal = $(this);
+      var recipient = button.data('id'); // Extract info from data-* attributes
+	  var recipPostid = button.data('postid');
+      modal.find(".modal-body input[name='_commentidOfOtherUser']").val(recipient);
+	  modal.find(".modal-body input[name='_postidOfOtherUser']").val(recipPostid);
+      // you can add more attributes here
+  });
+  
+  
+  $('#categoryDropDownPostCreate.dropdown-menu li').click(function() {
 
 		var $target = $( this );
 	 
@@ -40,6 +51,21 @@ $(document).ready(function () {
 		  .children( '.dropdown-toggle' ).dropdown( 'toggle' );
 		  
 		$('#categoryDropdownValue').val($target.val());
+		
+	   return false;
+	 
+	});
+  
+    $('#pillarRequestTypeDropdown.dropdown-menu li').click(function() {
+
+		var $target = $( this );
+	 
+		$target.closest( '.dropdown' )
+		  .find( '[data-bind="label"]' ).text( $target.text() )
+			 .end()
+		  .children( '.dropdown-toggle' ).dropdown( 'toggle' );
+		  
+		$('#_pillarRequestTypeDropdownVal').val($target.val());
 		
 	   return false;
 	 
