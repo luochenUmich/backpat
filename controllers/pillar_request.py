@@ -42,36 +42,36 @@ def create():
 		_isTwoWay = (_pillarRequestTypeDropdownVal == "2")
 		cursor = conn.cursor()
 		if (_isTwoWay or _pillarRequestTypeDropdownVal == "0"):
-			isValidOneWay = checkPillarValidity(username, supportUsername)
-			isValidOtherWay = checkPillarValidity(supportUsername, username)
+			isValidOneWay = checkPillarValidity(_username, _otherUsername)
+			isValidOtherWay = checkPillarValidity(_otherUsername, _username)
 			if (isValidOneWay == "" and isValidOtherWay == ""):
-				cursor.execute("insert into pillar_request (username, supportUsername, reason, isTwoWay) values (%s, %s, %s, %s)", (_username, _supportUsername, _reason, _isTwoWay, _username))
+				cursor.execute("insert into pillar_request (username, supportUsername, reason, isTwoWay, requestedByUsername) values (%s, %s, %s, %s, %s)", (_username, _otherUsername, _reason, _isTwoWay, _username))
 			else:
 				flash(isValidOneWay + " " + isValidOtherWay)
-				return redirect(redirect_url())
+				return redirect(redirect_url(request))
 		else: 
-			isValidOneWay = checkPillarValidity(username, supportUsername)
+			isValidOneWay = checkPillarValidity(_username, _otherUsername)
 			if (isValidOneWay == ""):
-				cursor.execute("insert into pillar_request (username, supportUsername, reason, isTwoWay) values (%s, %s, %s, %s)", (_supportUsername, _username, _reason, 0, _username))
+				cursor.execute("insert into pillar_request (username, supportUsername, reason, isTwoWay, requestedByUsername) values (%s, %s, %s, %s, %s)", (_otherUsername, _username, _reason, 0, _username))
 			else:
 				flash(isValidOneWay)
-				return redirect(redirect_url())
+				return redirect(redirect_url(request))
 		cursorid = cursor.lastrowid
 
 		if cursorid is not 0:
 			conn.commit()
 			flash("Pillar request sent")
-			return redirect(redirect_url())
+			return redirect(redirect_url(request))
 		else:
 			flash("Pillar request could not be created, sorry!")
-			return redirect(redirect_url())
+			return redirect(redirect_url(request))
 	else:
 		flash("Enter the required fields")
-		return redirect(redirect_url())
+		return redirect(redirect_url(request))
 		
 def getUsernameFromCommentid(commentid):
 	conn = mysql.connection
-	cursor = conn.cursor()
+	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
 	query = """select username from comment where commentid = %s"""
 	cursor.execute(query, (commentid,))
 	username = ""
@@ -83,7 +83,7 @@ def getUsernameFromCommentid(commentid):
 	
 def getUsernameFromPostid(postid):
 	conn = mysql.connection
-	cursor = conn.cursor()
+	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
 	query = """select username from post where postid = %s"""
 	cursor.execute(query, (postid,))
 	username = ""
@@ -95,7 +95,7 @@ def getUsernameFromPostid(postid):
 	
 def getUsernameFromEmail(email):
 	conn = mysql.connection
-	cursor = conn.cursor()
+	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
 	query = """select username from user where email = %s"""
 	cursor.execute(query, (email,))
 	username = ""
@@ -106,17 +106,97 @@ def getUsernameFromEmail(email):
 	return username
 	
 def checkPillarValidity(username, supportUsername):
+	print ("Checking pillar validity for " + username + " --> " + supportUsername)
+	if (username == supportUsername):
+		return "You cannot request yourself as a pillar"
 	conn = mysql.connection
 	cursor = conn.cursor()
 	query = """select count(*) from pillar where supportUsername = %s and username = %s """
 	cursor.execute(query, (username,supportUsername,))
 	errorText = ""
 	row = cursor.fetchone()
-	if (row):
+	if (row and is_int(row[0]) and int(row[0]) > 0):
 		errorText += "This pillar relationship already exists"
 	cursor.execute("select count(*) from pillar_request where supportUsername = %s and username = %s ", (username,supportUsername,))
 	row = cursor.fetchone()
-	if (row):
+	if (row and is_int(row[0]) and int(row[0]) > 0):
 		errorText += "There already exists a pending request for this pillar relationship"
 	cursor.close()
-	return username
+	return errorText
+
+@pillar_request.route('/pillar/remove',methods=['GET'])
+def remove_pillar():
+	if not is_logged_in():
+		return render_template('user_login.html')
+
+	_username = session['username'] 
+	if ('otherUsername' not in request.args):
+		flash('Specify another user username')
+		return redirect(redirect_url(request))
+	otherUsername = request.args['otherUsername']
+	
+	conn = mysql.connection
+	cursor = conn.cursor()
+	cursor.execute("""delete from pillar where (username = %s and supportUsername = %s) or (supportUsername = %s and username = %s)""", (_username, otherUsername, _username, otherUsername,))
+	conn.commit()
+	cursor.close()
+	return ""
+	
+@pillar_request.route('/pillar/remove_request',methods=['GET'])
+def remove_pillar_request():
+	if not is_logged_in():
+		return render_template('user_login.html')
+
+	_username = session['username']
+	if ('otherUsername' not in request.args):
+		flash('Specify another user username')
+		return redirect(redirect_url(request))
+	
+	conn = mysql.connection
+	cursor = conn.cursor()
+	cursor.execute("""delete from pillar_request where (username = %s and supportUsername = %s) or (supportUsername = %s and username = %s)""", (_username, otherUsername, _username, otherUsername,))
+	conn.commit()
+	cursor.close()
+	return redirect(redirect_url(request))
+	
+@pillar_request.route('/pillar/accept',methods=['GET'])
+def accept_pillar_request():
+	if not is_logged_in():
+		return render_template('user_login.html')
+
+	_username = session['username']
+	if ('otherUsername' not in request.args):
+		flash('Specify another user username')
+		return redirect(redirect_url(request))
+	_otherUsername = request.args.get('username')
+		
+	pillarRequestInfo = getPillarRequestInfo(_username, _otherUsername)
+	if (pillarRequestInfo):
+		conn = mysql.connection
+		cursor = conn.cursor()
+		numToInsert = 0
+		values = (0,)
+		insertValues = ";"
+		if(pillarRequestInfo["isTwoWay"] == "1"):
+			numToInsert = 2
+			insertValues = (_username, _username, _otherUsername, _username, _otherUsername, _username, _otherUsername)
+		else:
+			numToInsert = 1
+			insertValues = (_username, _username, _otherUsername, pillarRequestInfo["username"], pillarRequestInfo["supportUsername"])
+		try:
+			cursor.execute("""update pillar_request set date_accepted = CURRENT_TIMESTAMP() where (username = %s or supportUsername = %s) and requestedByUsername = %s; insert into pillar (username,supportUsername) values """ 
+			+ ("(%s,%s), (%s,%s);" if numToInsert > 1 else "(%s,%s);"), )
+			flash('Pillar request accepted')
+			conn.commit()
+		except:
+			flash('Failed to accept pillar request')
+		cursor.close()
+	return redirect(redirect_url(request))
+	
+def getPillarRequestInfo(username, requestedByUsername):
+	conn = mysql.connection
+	cursor = conn.cursor()
+	cursor.execute("""select top 1 from pillar_request where (supportUsername = %s or username = %s) and requestedByUsername = %s""", (username, username, requestedByUsername))
+	rVal = cursor.fetchone()
+	cursor.close()
+	return rVal

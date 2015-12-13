@@ -30,7 +30,7 @@ $(document).ready(function () {
       // you can add more attributes here
   });
   
-   $('#pillarRequestModal').on('show.bs.modal', function (event) {
+   $('#pillarModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
       var modal = $(this);
       var recipient = button.data('id'); // Extract info from data-* attributes
@@ -73,6 +73,15 @@ $(document).ready(function () {
 
     $("#profile_tab li").click(function () {
         $("#profile_tab li").removeClass('active');
+        $(this).addClass('active');
+
+        $('.tab_content').hide();
+        var selected_tab = $(this).find("a").attr("href");
+        $(selected_tab).show();
+    });
+	
+	$("#profile_tab_interior_tabs li").click(function () {
+        $("#profile_tab_interior_tabs li").removeClass('active');
         $(this).addClass('active');
 
         $('.tab_content').hide();

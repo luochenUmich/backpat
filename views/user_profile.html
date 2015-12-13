@@ -53,11 +53,17 @@
         </li>
         <li role="presentation"><a href="#comment_tab">Comments</a>
         </li>
+		<li role="presentation"><a href="#supporters_tab">People Supporting You ({{numSupporters}})</a>
+		</li>
+		<li role="presentation"><a href="#supporting_tab">People You're Supporting ({{numSupporting}})</a>
+		</li>
+		<li role="presentation"><a href="#requests_tab">Requests ({{numRequests}})</a>
+		</li>
     </ul>
     <div id="post">
 
         <div>
-            <div id="post_tab" class="tab_content" style="display: block;">
+            <div id="post_tab" class="tab_content" >
                 {% for post in posts %}
                     <div class="row post" style="border:1px solid black;">
                         <div class="row postHeader">
@@ -80,6 +86,17 @@
                 {% endfor %}
             </div>
             <div id="comment_tab" class="tab_content" style="display: none;">
+				<div class="row postHeader" style="display: block;font-size:large;font-weight:bold">
+					<div class="col-sm-7">
+						Comment you wrote
+					</div>
+					<div class="col-sm-3" style="">
+						Related Post
+					</div>
+					<div class="col-sm-2" style="">
+						Date Commented
+					</div>
+				</div>
                 {% for comment in comments %}
                     <div class="row">
                         <div class="col-sm-7">
@@ -94,5 +111,110 @@
                     </div>
                 {% endfor %}
             </div>
+			<div id="supporters_tab" class="tab_content" style="display: none;">
+				<div class="row postHeader" style="display: block;font-size:large;font-weight:bold">
+					<div class="col-sm-2">
+						Username
+					</div>
+					<div class="col-sm-7" style="">
+						Most Recent Comment and Related Post
+					</div>
+					<div class="col-sm-2" style="text-align:center">
+						Your Pillar Since
+					</div>
+					<div class="col-sm-1" style="text-align:center">
+						&nbsp;
+					</div>
+				</div>
+				{% for supporter in supporters %}
+					<div class="row post" style="border:1px solid black;">
+						<div class="row postHeader">
+							<div class="col-sm-2">
+								<a href="{{url_for('main.main_route')}}?supporter={{supporter.username}}">{{supporter.username}}</a>
+							</div>
+							<div class="col-sm-7">
+								"{{supporter.comment}}" on "<a href="{{url_for('post_view.show_post')}}?postid={{supporter.postid}}">"{{supporter.summary}}"</a>
+							</div>
+							<div class="col-sm-2">
+								{{supporter.dataCreated}}
+							</div>
+							<div class="col-sm-1">
+								<a href="{{url_for('pillar_request.remove_pillar')}}?otherUsername={{supporter.username}}" >Remove</a>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			<div id="supporting_tab" class="tab_content" style="display: none;">
+				<div class="row postHeader" style="display: block;font-size:large;font-weight:bold">
+					<div class="col-sm-2">
+						Username
+					</div>
+					<div class="col-sm-7" style="">
+						Most Recent Post by this User
+					</div>
+					<div class="col-sm-2" style="text-align:center">
+						Supporting Since
+					</div>
+					<div class="col-sm-1" style="text-align:center">
+						&nbsp;
+					</div>
+				</div>
+				{% for supporting in supportings %}
+					<div class="row">
+						<div class="col-sm-2">
+								<a href="{{url_for('main.main_route')}}?supporting={{supporting.username}}">{{supporting.username}}</a>
+							</div>
+							<div class="col-sm-7">
+								<a href="{{url_for('post_view.show_post')}}?postid={{supporting.postid}}">"{{supporting.summary}}"</a>
+							</div>
+							<div class="col-sm-2">
+								{{supporting.dataCreated}}
+							</div>
+							<div class="col-sm-1">
+								<a href="{{url_for('pillar_request.remove_pillar')}}?otherUsername={{supporting.username}}">Remove</a>
+							</div>
+					</div>
+				{% endfor %}
+			</div>
+			<div id="requests_tab" class="tab_content" style="display: none;">
+				<div class="row postHeader" style="display: block;font-size:large;font-weight:bold">
+					<div class="col-sm-3">
+						Requested By
+					</div>
+					<div class="col-sm-3" style="">
+						Request Description
+					</div>
+					<div class="col-sm-2" style="">
+						Request Reason
+					</div>
+					<div class="col-sm-2" style="">
+						Date Requested
+					</div>
+					<div class="col-sm-2" style="text-align:center">
+						&nbsp;
+					</div>
+				</div>
+				{% for pillarRequest in pillarRequests %}
+					<div class="row">
+						<div class="col-sm-2">
+							{{pillarRequest.requestedByUsername}}
+						</div>
+						<div class="col-sm-3">
+							{{pillarRequest.description}}
+						</div>
+						<div class="col-sm-3">
+							{{ pillarRequest.reason }}
+						</div>
+						<div class="col-sm-2">
+							{{ pillarRequest.dataCreated }}
+						</div>
+						<div class="col-sm-2">
+							<a href="{{url_for('pillar_request.accept_pillar_request')}}?otherUsername={{pillarRequest.requestedByUsername}}">Accept</a> / 
+							<a href="{{url_for('pillar_request.remove_pillar_request')}}?otherUsername={{pillarRequest.requestedByUsername}}">Deny</a>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
         </div>
 {% endblock %}

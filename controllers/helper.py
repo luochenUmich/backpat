@@ -1,6 +1,17 @@
 from flask import session, flash
 from bs4 import BeautifulSoup
 import datetime
+from extensions import mysql, mail
+from flask_mail import Message
+import string
+import random
+from itsdangerous import URLSafeSerializer
+import threading
+import hashlib
+import config
+import MySQLdb.cursors
+from datetime import date
+import sys
 
 def destroy_session():
 	session.pop('username', None)
@@ -48,7 +59,7 @@ def sanitize(value):
 
     return soup.renderContents()
 	
-def redirect_url(default='index'):
+def redirect_url(request, default='index'):
     return request.args.get('next') or \
            request.referrer or \
            url_for(default)

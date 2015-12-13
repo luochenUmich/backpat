@@ -84,6 +84,7 @@ def user_profile():
 	if 'username' not in session:
 		return render_template('user_login.html')
 	else:
+		#User Info
 		query = """select u.email, CASE WHEN u.adminLevel >= 2 THEN 'Administrator' WHEN u.adminLevel >= 1 THEN 'Moderator' ELSE 'Normal User' END as adminLevelText, CASE WHEN u.active then 'Active' else 'Inactive' end as status, u.created_at
 				from user u
 				where u.username = %s"""
@@ -91,7 +92,8 @@ def user_profile():
 		cur = conn.cursor(MySQLdb.cursors.DictCursor)
 		cur.execute(query, (session['username'],))
 		user = cur.fetchone()
-
+		
+		#Posts
 		query = """select p.postid, summary, description, dateCreated, dateLastModified, nc.ct
 				from post p
 				left join (select COUNT(*) as ct, postid from comment where active = 1 group by postid) nc on nc.postid = p.postid
@@ -101,6 +103,7 @@ def user_profile():
 		for post in posts:
 			post['dataCreated'] = str(post["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
 
+		#Comments you've made
 		query = """select c.commentid, c.dateCreated, c.comment, p.summary, c.postid
 				from comment c
 				left join post p on p.postid = c.postid
@@ -109,7 +112,47 @@ def user_profile():
 		comments = cur.fetchall()
 		for comment in comments:
 			comment['dataCreated'] = str(comment["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
-		return render_template('user_profile.html', username=session['username'], registered_on=user['created_at'], adminLevel=user['adminLevelText'], email=user['email'], status=user['status'], posts=posts, comments=comments)
+			
+		#Supporters you have
+		query = """select p.username, p.dateCreated, ci.postid, ci.comment, ci.summary
+					from pillar p
+					left join (select c.username,c.comment, c.postid, po.summary 
+						from comment c 
+						left join post po on po.postid = c.commentid 
+						where po.username = %s and c.active = 1 
+						and po.active = 1 order by c.dateCreated desc
+						limit 1) ci on ci.username = p.supportUsername
+					where p.supportUsername = %s"""
+		cur.execute(query, (session['username'],session['username']))
+		supporters = cur.fetchall()
+		numSupporters = cur.rowcount
+		for supporter in supporters:
+			supporter['dataCreated'] = str(supporter["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
+			
+		#People you are supporting
+		query = """select p.supportUsername as username, p.dateCreated, pi.postid, pi.summary
+					from pillar p
+					left join (select po.username,po.postid, po.summary from post po where po.active = 1 order by po.dateCreated desc limit 1) pi on pi.username = p.supportUsername
+					where p.username = %s"""
+		cur.execute(query, (session['username'],))
+		supportings = cur.fetchall()
+		numSupportings = cur.rowcount
+		for supporting in supportings:
+			supporting['dataCreated'] = str(supporting["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
+			
+		#Pillar Requests
+		query = """select requestedByUsername, (CASE WHEN pr.isTwoWay THEN 'Requesting and Offering' WHEN %s = pr.username THEN 'Requesting' ELSE 'Offering' END) + ' Support' as description, pr.reason, pr.dateCreated
+					from pillar_request pr
+					where requestedByUsername != %s and (username = %s or supportUsername = %s)"""
+		cur.execute(query, (session['username'],session['username'],session['username'],session['username'],))
+		pillarRequests = cur.fetchall()
+		numPillarRequests = cur.rowcount
+		for pillarRequest in pillarRequests:
+			pillarRequest['dataCreated'] = str(pillarRequest["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
+			
+		cur.close()
+			
+		return render_template('user_profile.html', username=session['username'], registered_on=user['created_at'], adminLevel=user['adminLevelText'], email=user['email'], status=user['status'], posts=posts, comments=comments, pillarRequests=pillarRequests, supporters=supporters, supportings=supportings,numSupporters=numSupporters, numSupporting=numSupportings,  numRequests=numPillarRequests)
 
 @user.route('/user/delete', methods=['GET'])
 def user_delete():
