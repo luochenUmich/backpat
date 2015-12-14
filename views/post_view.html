@@ -14,15 +14,17 @@
   <div class="row post">
 		<!-- Post Header -->
 		<div class="row post-title">
-			<div class="col-sm-9" style="font-size:150%">
+			<div class="col-sm-7" style="font-size:150%">
 				<strong>Title: </strong>{{title}}
 			</div>
 			<div class="col-sm-2">
-				{{dateCreatedInfo}}
+				{{dateCreatedInfo}} <label style="{{posterUsernameLabelStyle}}"> by {{posterUsername}}</label>
 			</div>
-			<div class="col-sm-1">
+			<div class="col-sm-3" style="text-align:right">
 				<a href="#" data-toggle="modal" data-target="#commentModal"
-					   data-id="0">Reply</a> 
+					   data-id="0">Reply</a>
+				| <a href="#" data-toggle="modal" data-target="#pillarModal"
+					   data-id="0" data-postid="{{postid}}">Make Pillar</a>&nbsp;&nbsp;
 				<!--<a class="hide-btn" href="#" data-toggle="collapse" data-target="div.comment > div > div.media">Hide Replies</a>-->
 			</div>
 		</div>

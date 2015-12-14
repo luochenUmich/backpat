@@ -1,9 +1,17 @@
 from flask import *
-from extensions import mysql
 from helper import *
-import MySQLdb
+from extensions import mysql, mail
+from flask_mail import Message
+import string
+import random
+from itsdangerous import URLSafeSerializer
+import threading
+import hashlib
+import config
 import MySQLdb.cursors
+from datetime import date
 import sys
+import traceback
 
 pillar_request = Blueprint('pillar_request', __name__,template_folder='views')
 
@@ -168,35 +176,39 @@ def accept_pillar_request():
 	if ('otherUsername' not in request.args):
 		flash('Specify another user username')
 		return redirect(redirect_url(request))
-	_otherUsername = request.args.get('username')
+	_otherUsername = request.args.get('otherUsername')
 		
 	pillarRequestInfo = getPillarRequestInfo(_username, _otherUsername)
 	if (pillarRequestInfo):
+		print("Pillar request info found")
+		sys.stdout.flush()
 		conn = mysql.connection
 		cursor = conn.cursor()
 		numToInsert = 0
-		values = (0,)
-		insertValues = ";"
+		insertValues = None
 		if(pillarRequestInfo["isTwoWay"] == "1"):
 			numToInsert = 2
-			insertValues = (_username, _username, _otherUsername, _username, _otherUsername, _username, _otherUsername)
+			insertValues = (_username, _otherUsername, _username, _otherUsername)
 		else:
 			numToInsert = 1
-			insertValues = (_username, _username, _otherUsername, pillarRequestInfo["username"], pillarRequestInfo["supportUsername"])
+			insertValues = (pillarRequestInfo["username"], pillarRequestInfo["supportUsername"])
 		try:
-			cursor.execute("""update pillar_request set date_accepted = CURRENT_TIMESTAMP() where (username = %s or supportUsername = %s) and requestedByUsername = %s; insert into pillar (username,supportUsername) values """ 
-			+ ("(%s,%s), (%s,%s);" if numToInsert > 1 else "(%s,%s);"), )
-			flash('Pillar request accepted')
+			cursor.execute("""update pillar_request set dateAccepted = CURRENT_TIMESTAMP() where (username = %s or supportUsername = %s) and requestedByUsername = %s""", (_username, _username, _otherUsername)) 
+			cursor.close()
+			cursor = conn.cursor()
+			cursor.execute("insert into pillar (username, supportUsername) values " + ("(%s,%s), (%s,%s);" if numToInsert > 1 else "(%s,%s);"), insertValues)
 			conn.commit()
-		except:
+			flash('Pillar request accepted')
+		except Exception as e:
+			print("\n" + str(traceback.format_exception(*sys.exc_info())) + "\n")
 			flash('Failed to accept pillar request')
 		cursor.close()
 	return redirect(redirect_url(request))
 	
 def getPillarRequestInfo(username, requestedByUsername):
 	conn = mysql.connection
-	cursor = conn.cursor()
-	cursor.execute("""select top 1 from pillar_request where (supportUsername = %s or username = %s) and requestedByUsername = %s""", (username, username, requestedByUsername))
+	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+	cursor.execute("""select * from pillar_request where ((supportUsername = %s or username = %s) and requestedByUsername = %s) limit 1""", (username, username, requestedByUsername))
 	rVal = cursor.fetchone()
 	cursor.close()
 	return rVal

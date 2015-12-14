@@ -140,11 +140,11 @@ def user_profile():
 		for supporting in supportings:
 			supporting['dataCreated'] = str(supporting["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
 			
-		#Pillar Requests
-		query = """select requestedByUsername, (CASE WHEN pr.isTwoWay THEN 'Requesting and Offering' WHEN %s = pr.username THEN 'Requesting' ELSE 'Offering' END) + ' Support' as description, pr.reason, pr.dateCreated
+		#Pillar Requests as description
+		query = """select requestedByUsername, pr.reason, pr.dateCreated, CASE WHEN pr.isTwoWay = 1 THEN 'Requesting and Offering Support' WHEN pr.username = %s THEN 'Requesting Support' ELSE 'Offering Support' END as description
 					from pillar_request pr
-					where requestedByUsername != %s and (username = %s or supportUsername = %s)"""
-		cur.execute(query, (session['username'],session['username'],session['username'],session['username'],))
+					where requestedByUsername != %s and (username = %s or supportUsername = %s) and dateAccepted < 19700101"""
+		cur.execute(query, (session['username'],session['username'],session['username'],session['username']))
 		pillarRequests = cur.fetchall()
 		numPillarRequests = cur.rowcount
 		for pillarRequest in pillarRequests:
