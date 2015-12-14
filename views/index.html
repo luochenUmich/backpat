@@ -7,43 +7,178 @@
         {% endif %}
     {% endwith %}
 
-	<form id="mainForm" class="form-horizontal" method="post" action="{{ url_for('main.main_route') }}">
-		<div class="row">
-			<div class="col-sm-12">
-				<h1>Current Posts
-					{% if session.username %}
-						<a style="float:right" class="btn btn-lg btn-primary center-block" data-toggle="modal"
-						   data-target="#postModal"> Post
-						</a>
-					{% endif %}
-				</h1>
+	<form id="mainForm" class="form-horizontal" method="post" action="{{ url_for('main.main_route') }}#">
+		<div>
+			{% if session.username %}
+				<div style="display:block;">
+					<ul class="nav nav-tabs" id="main_tab" style="float:left;">
+						<li role="presentation" class="active"><a href="#post_tab">All Posts</a>
+						</li>
+						<li role="presentation"><a href="#supporting_tab">Posts by People You're Supporting</a>
+						</li>
+						<li role="presentation"><a href="#supporters_tab">Comments on your Posts</a>
+						</li>
+					</ul>
+					<a style="float:right" class="btn btn-lg btn-primary center-block" data-toggle="modal"
+					   data-target="#postModal">New Post
+					</a>
+					<div style="clear: both;"></div> 
+				</div>
+			{% endif %}
+			<div id="main_tab_tabs">
+				<div id="post_tab" class="tab_content" >
+					<div class="row">
+						<div class="col-sm-12">
 
-				<div class="row postHeader" style="font-weight:bold;font-size:120%">
-					<div class="col-sm-6">
-						Title/Description
-					</div>
-					<div class="col-sm-3" style="text-align:center">
-						<label for="description" class="control-label">Category:</label>
-						<div class="dropdown" style="display:inline!important;">
-								<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
-									<span data-bind="label">{{_categoryFilterName}}</span><span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" id="categoryDropDownFilter">
-									<li role="presentation" value="0"><a role="menuitem" tabindex="-1" href="#">Show All</a></li>
-									<li role="presentation" value="-1"><a role="menuitem" tabindex="-1" href="#">None</a></li>
-									{{categories|safe}}
-								</ul>
-								<input type="hidden" id="categoryFilterValue" name="_categoryidFilter" value="{{_categoryidFilter}}">  </input>
+							<div class="row postHeader" style="font-weight:bold;font-size:120%">
+								<div class="col-sm-6">
+									Title/Description
+								</div>
+								<div class="col-sm-3" style="text-align:center">
+									<label for="description" class="control-label">Category:</label>
+									<div class="dropdown" style="display:inline!important;">
+											<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+												<span data-bind="label">{{_categoryFilterName}}</span><span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" id="categoryDropDownFilter">
+												<li role="presentation" value="0"><a role="menuitem" tabindex="-1" href="#">Show All</a></li>
+												<li role="presentation" value="-1"><a role="menuitem" tabindex="-1" href="#">None</a></li>
+												{{categories|safe}}
+											</ul>
+											<input type="hidden" id="categoryFilterValue" name="_categoryidFilter" value="{{_categoryidFilter}}">  </input>
+									</div>
+								</div>
+								<div class="col-sm-2" style="text-align:center">
+									Date
+								</div>
+								<div class="col-sm-1" style="text-align:center">
+									Replies
+								</div>
+							</div>
+							{{ Posts|safe }}
 						</div>
 					</div>
-					<div class="col-sm-2" style="text-align:center">
-						Date
-					</div>
-					<div class="col-sm-1" style="text-align:center">
-						Replies
-					</div>
 				</div>
-				{{ Posts|safe }}
+				{% if session.username %}
+					<div id="supporting_tab" class="tab_content" style="display: none;" >
+						<div class="row postHeader" style="font-weight:bold;font-size:120%">
+							<div class="col-sm-2">
+								<div class="dropdown" style="display:inline!important;">
+									<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+										<span data-bind="label">
+												{% if _usernameFilterSupportingsValue == "0" %} 
+													Select a pillar 
+												{% else %} 
+													{{_usernameFilterSupportingsValue}} 
+												{% endif %}
+										</span><span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" id="usernameFilterSupportings">
+										<li role="presentation" value="0"><a role="menuitem" tabindex="-1" href="#">Show All</a></li>
+										{% for supporting in supportings %}
+											<li role="presentation" value="{{supporting}}"><a role="menuitem" tabindex="-1" href="#supporting_tab">{{supporting}}</a></li>
+										{% endfor %}
+									</ul>
+									<input type="hidden" id="usernameFilterSupportingsValue" name="_usernameFilterSupportingsValue" value="{{_usernameFilterSupportingsValue}}">  </input>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								Title/Description
+							</div>
+							<div class="col-sm-3" style="text-align:left">
+								<label for="description" class="control-label">Category:</label>
+								<div class="dropdown" style="display:inline!important;">
+										<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+											<span data-bind="label">{{_categoryFilterName}}</span><span class="caret"></span>
+										</button>
+										<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" id="categoryDropDownFilter">
+											<li role="presentation" value="0"><a role="menuitem" tabindex="-1" href="#">Show All</a></li>
+											<li role="presentation" value="-1"><a role="menuitem" tabindex="-1" href="#">None</a></li>
+											{{categories|safe}}
+										</ul>
+										<input type="hidden" id="categoryFilterValue" name="_categoryidFilter" value="{{_categoryidFilter}}">  </input>
+								</div>
+							</div>
+							<div class="col-sm-2" style="text-align:center">
+								Date
+							</div>
+							<div class="col-sm-1" style="text-align:center">
+								Replies
+							</div>
+						</div>
+						 {% for post in supportingPosts %}
+							<div class="row post" style="border:1px solid black;">
+								<div class="row postHeader">
+									<div class="col-sm-2">
+										{{ post.username }}
+									</div>
+									<div class="col-sm-4">
+										<div style="font-weight:bold; font-size:120%">
+											<a href="/post/view?postid={{ post.postid }}">{{ post.summary }}</a>
+										</div>
+										<div style="overflow-x:hidden;width:100%;">
+											{{ post.description }}
+										</div>
+									</div>
+									<div class="col-sm-3">
+										{{ post.categoryName }}
+									</div>
+									<div class="col-sm-2" style="text-align:center">
+										{{ post.dataCreated }}
+									</div>
+									<div class="col-sm-1" style="text-align:center">
+										{{ post.ct }}
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+					<div id="supporters_tab" class="tab_content" style="display: none;">
+						<div class="row postHeader" style="font-weight:bold;font-size:120%">
+							<div class="col-sm-2">
+								<div class="dropdown" style="display:inline!important;">
+									<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+										<span data-bind="label">{% if _usernameFilterSupportersValue == "0" %}Select a pillar{% else %}{{_usernameFilterSupportersValue}}{% endif %}</span><span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" id="usernameFilterSupporters">
+										<li role="presentation" value="0"><a role="menuitem" tabindex="-1" href="#supporters_tab">Show All</a></li>
+										{% for supporter in supporters %}
+											<li role="presentation" value="{{supporter}}"><a role="menuitem" tabindex="-1" href="#supporters_tab">{{supporter}}</a></li>
+										{% endfor %}
+									</ul>
+									<input type="hidden" id="usernameFilterSupportersValue" name="_usernameFilterSupportersValue" value="{{_usernameFilterSupportersValue}}">  </input>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								Comment
+							</div>
+							<div class="col-sm-4" style="text-align:center">
+								Related Post
+							</div>
+							<div class="col-sm-2" style="text-align:center">
+								Date
+							</div>
+						</div>
+						 {% for comment in  comments%}
+							<div class="row post" style="border:1px solid black;">
+								<div class="row postHeader">
+									<div class="col-sm-2">
+										{{comment.username}}
+									</div>
+									<div class="col-sm-4">
+										{{comment.comment}}
+									</div>
+									<div class="col-sm-4" style="text-align:center">
+										<a href="/post/view?postid={{ comment.postid }}">{{comment.summary}}</a>
+									</div>
+									<div class="col-sm-2" style="text-align:center">
+										{{comment.dataCreated}}
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
 			</div>
 		</div>
 	</form>

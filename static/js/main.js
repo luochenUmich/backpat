@@ -80,8 +80,10 @@ $(document).ready(function () {
         $(selected_tab).show();
     });
 	
-	$("#profile_tab_interior_tabs li").click(function () {
-        $("#profile_tab_interior_tabs li").removeClass('active');
+	
+	
+	$("#main_tab li").click(function () {
+        $("#main_tab li").removeClass('active');
         $(this).addClass('active');
 
         $('.tab_content').hide();
@@ -103,5 +105,60 @@ $(document).ready(function () {
 		
 		return false;
 	});
+	
+	$('#categoryDropDownFilter.dropdown-menu li').click(function() {
+		var $target = $( this );
+	 
+		$target.closest( '.dropdown' )
+		  .find( '[data-bind="label"]' ).text( $target.text() )
+			 .end()
+		  .children( '.dropdown-toggle' ).dropdown( 'toggle' );
+		  
+		$('#usernameFilterSupportersValue').val($target.val());
+	 
+		document.getElementById("mainForm").submit();
+		
+		return false;
+	});
+	
+	$('#usernameFilterSupportings.dropdown-menu li').click(function() {
+		var $target = $( this );
+	 
+		$target.closest( '.dropdown' )
+		  .find( '[data-bind="label"]' ).text( $target.text() )
+			 .end()
+		  .children( '.dropdown-toggle' ).dropdown( 'toggle' );
+		  
+		$('#usernameFilterSupportingsValue').val($target.val());
+	 
+		document.getElementById("mainForm").submit();
+		
+		return false;
+	});
+	
+	$('#usernameFilterSupporters.dropdown-menu li').click(function() {
+		var $target = $( this );
+	 
+		$target.closest( '.dropdown' )
+		  .find( '[data-bind="label"]' ).text( $target.text() )
+			 .end()
+		  .children( '.dropdown-toggle' ).dropdown( 'toggle' );
+		  
+		$('#usernameFilterSupportersValue').val($target.val());
+	 
+		document.getElementById("mainForm").submit();
+		
+		return false;
+	});
+	
+	if(window.location.hash) {
+		  var hash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
+			$("#main_tab li").removeClass('active');
+			$('#main_tab_tabs .tab_content').hide();
+			$("#main_tab li a[href=#" + hash + "]").parent().addClass('active');
+			$("#" + hash).show();
+	  } else {
+		  // No hash found
+	  }
 });
 
