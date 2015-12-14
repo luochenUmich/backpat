@@ -1,20 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-	<style type="text/css" >
-		.gridHeaderRow {
-			font-size:larger; font-weight:bold;
-			padding-bottom:5px;
-		}
-		.infoTable{
-			border-radius:5px;
-			border:1px solid gray;
-			padding:10px;
-			margin:10px;
-		}
-		.dropdown{
-			height:20px
-		}
-	</style>
   <div class="form-group form-group-small">
     {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -24,7 +9,7 @@
       {% endif %}
     {% endwith %}
   </div>
-  <div style="font-size:x-large; font-weight:bold;margin-top:3px;margin-bottom:3px; text-align:center">
+  <div id="userNameInfo" >
 	User Information for {{username}}
   </div>
   <div class="form-group infoTable" >
@@ -34,7 +19,7 @@
 			</div>
 			<div class="col-sm-6">
 				User Type: 
-				<div class="dropdown" style="display:inline!important;">
+				<div class="dropdown inlineDrop">
 					<button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">{{usertype}}
 						<span class="caret"></span>
 					</button>

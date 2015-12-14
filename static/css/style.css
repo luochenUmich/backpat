@@ -1,8 +1,20 @@
 /*put all css here*/
 
+body {
+    background-color: #c9c9c9
+}
+
+div{
+    color: white;
+}
+
+
 .post {
-	background-color: #f0f0f5;
-	margin-bottom:5px;
+	background-color: lightblue;
+	margin:5px;
+	border: 3px solid #89bdd3;
+	border-radius: 3px;
+    padding: 5px;
 }
 .post-title{
 	margin-top: 12px;
@@ -54,6 +66,39 @@ h1 {
 	margin:2px;
 }
 
+.gridHeaderRow {
+    font-size:larger; font-weight:bold;
+    padding-bottom:5px;
+}
+.infoTable{
+    border-radius:5px;
+    border:1px solid gray;
+    padding:10px;
+    margin:10px;
+}
+.dropdown{
+    height:20px
+}
+
+#userNameInfo{
+    font-size:x-large; 
+    font-weight:bold;
+    margin-top:3px;
+    margin-bottom:3px; 
+    text-align:center
+}
+
+.inlineDrop{
+    display:inline!important;
+}
+
+#commentsArea{
+    font-size:larger; 
+    font-weight:bold;
+    border-bottom:1px solid black;
+    margin-top:3px;
+    margin-bottom:3px
+}
 /*.comment-child {*/
 	/*display: none;*/
 /*}*/
