@@ -69,7 +69,7 @@ def show_categories():
 	if (htmlToReturn == ""):
 		htmlToReturn = "No categories match these criteria"
 		
-	return render_template('categoryList.html', list=htmlToReturn, a_a = _a_a, a_i = _a_i, categoryid=categoryid, button_text = ("Add New Category" if categoryid == 0 else "Edit Category #" + str(categoryid)), categoryName = categoryName)
+	return render_template('categorylist.html', list=htmlToReturn, a_a = _a_a, a_i = _a_i, categoryid=categoryid, button_text = ("Add New Category" if categoryid == 0 else "Edit Category #" + str(categoryid)), categoryName = categoryName)
 
 @categorylist.route('/admin/categorylist/update_category',methods=['POST'])
 def update_category():
