@@ -141,10 +141,11 @@ def change_ban_status():
 def get_user_posts(username):
 	post_template_html = open('views/post_template.html', 'r').read()
 	htmlToReturn = ""
-	query = """select p.postid, summary, description, dateCreated, dateLastModified, nc.ct
+	query = """select p.postid, p.summary, p.description, p.dateCreated, p.dateLastModified, nc.ct, cat.categoryName
 				from post p
+				left join category cat on p.categoryid = cat.categoryid
 				left join (select COUNT(*) as ct, postid from comment where active = 1 group by postid) nc on nc.postid = p.postid
-				where p.active = 1 and username = %s order by dateCreated desc, dateLastModified, summary"""
+				where p.active = 1 and p.username = %s order by p.dateCreated desc, p.dateLastModified, p.summary"""
 	conn = mysql.connection
 	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
 	cursor.execute(query, (username,))
@@ -154,7 +155,7 @@ def get_user_posts(username):
 		dateLastModified = post["dateLastModified"]
 		if(dateLastModified and dateLastModified != post["dateCreated"]):
 			_dateInfo += " (edited on " + str(dateLastModified.strftime("%m/%d/%y %I:%M%p")) + ")"
-		htmlToReturn += post_template_html.format(url_for('post_view.show_post') + "?postid=" + str(post["postid"]), post["summary"],post["description"],_dateInfo,post["ct"] )
+		htmlToReturn += post_template_html.format(url_for('post_view.show_post') + "?postid=" + str(post["postid"]), post["summary"].encode('ascii', 'ignore'),post["description"].encode('ascii', 'ignore'),post["categoryName"],_dateInfo,post["ct"] )
 		#htmlToReturn += render_template('post_template.html', postid=post["postid"], title=post["summary"], description=post["description"],dateInfo=_dateInfo)
 		post = cursor.fetchone()
 	cursor.close()
@@ -198,9 +199,9 @@ def get_user_reports(username):
 							</div> """
 		htmlToReturn += report_grid_row_html.format(str(report["comment"])
 												, url_for('post_view.show_post') + "?postid" + str(report["postid"])
-												, report["summary"]
+												, report["summary"].encode('ascii', 'ignore')
 												, report["dateCreated"].strftime("%m/%d/%y %I:%M%p")
-												, report["reportText"]
+												, report["reportText"].encode('ascii', 'ignore')
 												, report["reportStatus"])
 		
 		report = cursor.fetchone()
@@ -224,5 +225,5 @@ def get_user_comments(username):
 	comments = cursor.fetchall()
 	cursor.close()
 	for comment in comments:
-		htmlToReturn += template_comment_row.format(str(comment["comment"]), url_for('post_view.show_post') + "?postid=" + str(comment["postid"]), comment["summary"], comment["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
+		htmlToReturn += template_comment_row.format(str(comment["comment"].encode('ascii', 'ignore')), url_for('post_view.show_post') + "?postid=" + str(comment["postid"]), comment["summary"].encode('ascii', 'ignore'), comment["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
 	return htmlToReturn

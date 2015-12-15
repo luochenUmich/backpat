@@ -15,7 +15,11 @@
 		<a href="{}">{}</a><!-- Reported by-->
 	</div>
 	<div class="col-sm-2">
-		<a href="{}">{}</a><!--Hide/Unhide Report-->
-		<a style="display:{}" href="{}">| Ban User</a><!--Ban User-->
+		<span style="display:{}"><a href="{}" alt="Delete Comment/Post">Delete</a><!--Delete Comment/Post--></span>
+		<span style="display:{}"><label>{}</label><a href="{}" alt="Ban Creator of this Comment/Post">Ban User</a><!--Ban User--></span>
+		<span style="display:{}">|&nbsp;<a href="{}" alt="Ban Commenter/Poster and Delete their comment/post">Both</a></span><!--Both-->
+		&nbsp;&nbsp;<a href="{}"><img class=""
+                 src="/static/imgs/redXSmall.png"
+				 height="13" width="13" alt="{}"></a><!--Hide/Unhide Report-->
 	</div>
 </div>
