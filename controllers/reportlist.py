@@ -22,11 +22,13 @@ def show_reports():
 		return redirect(url_for('main.main_route'))
 	list_type_qs = request.args.get('list')
 		
-	query = """select r.reportid, c.commentid, c.dateCreated, c.comment, p.summary, r.postid, r.reportText, r.reportedByUsername, c.username, CASE WHEN u.active = 1 THEN 'Active' ELSE 'Banned' END as reportedUserStatus, u.active as userActive, c.active as commentActive, p.active as postActive
+	query = """select r.reportid, c.commentid, r.dateReported, c.comment, p.summary, r.postid, r.reportText, r.reportedByUsername,CASE WHEN r.commentid = 0 THEN p.username ELSE c.username END as username
+					,u.active as commenterActive, u2.active as posterActive, c.active as commentActive, p.active as postActive
 				from report r
 				left join post p on p.postid = r.postid
 				left join comment c on c.commentid = r.commentid
 				left join user u on c.username = u.username
+				left join user u2 on p.username = u2.username
 				where r.active = %s"""
 				
 	list_html = ""
@@ -50,38 +52,39 @@ def show_reports():
 	while(report):
 		if(htmlToReturn == ""):
 			htmlToReturn = """<br/><div class="row table_header" style="font-weight:bold;font-size:large">
-								<div class="col-sm-3">
-									Reported Comment
+								<div class="col-sm-4">
+									Reported Content
 								</div>
-								<div class="col-sm-2">
-									Related Post
-								</div>
-								<div class="col-sm-2">
-									Date Reported
+								<div class="col-sm-1">
+									User
 								</div>
 								<div class="col-sm-2">
 									Notes on Report
 								</div>
-								<div class="col-sm-1">
-									Reporter
+								<div class="col-sm-3">
+									Reported By
 								</div>
 								<div class="col-sm-2">
 									&nbsp;
 								</div>
 							</div> """
 		
-		showDeleteButton = (report["commentActive"] == 1) and (report["postActive"] == 1) and active == "1"
-		showBanButton = (report["userActive"] == 1) and active == "1"
+		isPost = report["commentid"] == None or report["commentid"] == 0
+		showDeleteButton = (isPost or report["commentActive"] == 1) and (report["postActive"] == 1) and active == "1"
+		showBanButton = (report["posterActive"] == 1 if isPost else report["commenterActive"] == 1) and active == "1"
+		commentText = "\"" + str(report["comment"]) + "\" on" if not isPost else ""
+
 		
-		htmlToReturn += report_grid_row_html.format(str(report["comment"])
-												,url_for('admin_user_profile.show_user_profile') + "?username=" + str(report["username"])
-												, str(report["username"])
+		
+		htmlToReturn += report_grid_row_html.format(commentText
 												, url_for('post_view.show_post') + "?postid=" + str(report["postid"])
 												, report["summary"]
-												, ("" if (report["dateCreated"] == None) else report["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
+												,url_for('admin_user_profile.show_user_profile') + "?username=" + str(report["username"])
+												, str(report["username"]) + (" (Poster)" if isPost else " (Commenter)")
 												, report["reportText"]
 												, url_for('admin_user_profile.show_user_profile') + "?username=" + str(report["reportedByUsername"])
 												,  report["reportedByUsername"]
+												, ("" if (report["dateReported"] == None) else report["dateReported"].strftime("%m/%d/%y %I:%M%p"))
 												, ('default' if showDeleteButton else 'none')
 												, url_for('reportlist.delete') + "?reportid=" + str(report["reportid"]) + "&list=" + list_type_qs
 												, ('default' if showBanButton else 'none')

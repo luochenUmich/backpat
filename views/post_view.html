@@ -14,17 +14,21 @@
   <div class="row post">
 		<!-- Post Header -->
 		<div class="row post-title">
-			<div class="col-sm-7" style="font-size:150%">
+			<div class="col-sm-5" style="font-size:150%">
 				<strong>Title: </strong>{{title}}
 			</div>
-			<div class="col-sm-2">
+			<div class="col-sm-3">
 				{{dateCreatedInfo}} <label style="{{posterUsernameLabelStyle}}"> by {{posterUsername}}</label>
 			</div>
-			<div class="col-sm-3" style="text-align:right">
+			<div class="col-sm-4" style="text-align:right">
 				<a href="#" data-toggle="modal" data-target="#commentModal"
 					   data-id="0">Reply</a>
-				| <a href="#" data-toggle="modal" data-target="#pillarModal"
-					   data-id="0" data-postid="{{postid}}">Make Pillar</a>&nbsp;&nbsp;
+				<a href="#" data-toggle="modal" data-target="#reportModal"
+					   data-id="0" >| Report Post</a>
+				<a href="#" data-toggle="modal" data-target="#pillarModal"
+					   data-id="0" data-postid="{{postid}}">| Make Pillar</a>
+				<a href="#" data-toggle="modal" data-target="#removeModal" 
+					   data-id="0" style="display:{{removePostDisplay}}">| {{removeTextPost}}</a>&nbsp;&nbsp;
 				<!--<a class="hide-btn" href="#" data-toggle="collapse" data-target="div.comment > div > div.media">Hide Replies</a>-->
 			</div>
 		</div>
@@ -47,6 +51,9 @@
 	<div class="row post">
 		<div class="col-sm-12" id="commentsArea" >
 			Comments
+			 {% if session.adminLevel and session.adminLevel >= 2 %}
+				 &nbsp;&nbsp;&nbsp; <input type="checkbox" {{isChecked}} onclick='window.location.assign("{{checkbox_redirect_url}}")'/> Show deleted comments?
+            {% endif %}
 		</div>
 		<div class="col-sm-12" style="margin-top:3px">
 			{{comment_section|safe}}
@@ -88,6 +95,30 @@
 					</div>
 					<button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
 					<button type="submit" class="btn btn-primary">Send Report</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="exampleModalLabel">Remove Comment/Post</h4>
+			</div>
+			<div class="modal-body">
+				<form id="newReportForm" method="post" action="{{ url_for('post_view.remove_item') }}?postid={{postid}}" onsubmit="disablePostButton($(this));">
+					<div class="form-group">
+						<!-- Parent Comment ID will be a hidden input filed -->
+						<input type="hidden" name="_commentidRemove" value="">
+						{% if session.adminLevel and session.adminLevel >= 2 %}
+							 &nbsp;&nbsp;&nbsp; <input type="checkbox" name="_banUser" value="1"> Ban User?
+						{% else %}
+							&nbsp;&nbsp;&nbsp; Are you sure you want to remove this comment?
+						{% endif %}
+					</div>
+					<button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary">Remove Comment/Post</button>
 				</form>
 			</div>
 		</div>

@@ -22,6 +22,14 @@ $(document).ready(function () {
       // you can add more attributes here
   });
   
+   $('#removeModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var modal = $(this);
+      var recipient = button.data('id'); // Extract info from data-* attributes
+      modal.find(".modal-body input[name='_commentidRemove']").val(recipient);
+      // you can add more attributes here
+  });
+  
   $('#reportModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
       var modal = $(this);

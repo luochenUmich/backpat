@@ -11,7 +11,8 @@ def makeComment():
 	if not is_logged_in():
 		return render_template('user_login.html')
 	if 'postid' not in request.args:
-		return json.dumps({'error':'postid not specified'})
+		flash (json.dumps({'error':'postid not specified'}))
+		return redirect(redirect_url(request))
 	postid = request.args.get('postid')
 	conn = mysql.connection
 	cursor = conn.cursor()
@@ -61,15 +62,17 @@ def reportComment():
 	try:
 		_username = session['username'] 
 		if ('reportText' not in request.form ):
-			return json.dumps({'error':'report notes not specified'})
+			flash (json.dumps({'error':'report notes not specified'}))
+			return redirect(redirect_url(request))
 			
 		if ('commentid' not in request.form  or not is_int(request.form['commentid'])):
-			return json.dumps({'error':'comment to report not specified'})
+			flash (json.dumps({'error':'comment to report not specified'}))
+			return redirect(redirect_url(request))
 			
 		_reportText = sanitize(request.form['reportText']) #text of the ban report
 		commentid = int(sanitize(request.form['commentid'])) #Commentid 
 		
-		if postid and _username and _reportText and commentid:
+		if postid and _username and _reportText:
 			# All Good, let's call MySQL
 			cursor.execute("""insert into report (postid, commentid, reportText, reportedByUsername) values (%s, %s, %s, %s)""", (postid, commentid, _reportText, _username))
 			reportid = cursor.lastrowid
