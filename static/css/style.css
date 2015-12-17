@@ -96,6 +96,10 @@ h1 {
     height:20px
 }
 
+.dropdown-menu{
+    position: static;
+}
+
 #userNameInfo{
     font-size:x-large; 
     font-weight:bold;
