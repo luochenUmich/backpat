@@ -133,7 +133,13 @@
 								<a href="{{url_for('main.main_route')}}?supporter={{supporter.username}}">{{supporter.username}}</a>
 							</div>
 							<div class="col-sm-7">
-								"{{supporter.comment}}" on "<a href="{{url_for('post_view.show_post')}}?postid={{supporter.postid}}">"{{supporter.summary}}"</a>
+								"{{supporter.comment}}"
+								{% if supporter.comment %}
+									on 
+									<a href="{{url_for('post_view.show_post')}}?postid={{supporter.postid}}">"{{supporter.summary}}"</a>
+								{%else%}
+									&nbsp;
+								{%endif%}
 							</div>
 							<div class="col-sm-2">
 								{{supporter.dataCreated}}
@@ -166,7 +172,11 @@
 								<a href="{{url_for('main.main_route')}}?supporting={{supporting.username}}">{{supporting.username}}</a>
 							</div>
 							<div class="col-sm-7">
-								<a href="{{url_for('post_view.show_post')}}?postid={{supporting.postid}}">"{{supporting.summary}}"</a>
+								{% if supporting.summary %}
+									<a href="{{url_for('post_view.show_post')}}?postid={{supporting.postid}}">"{{supporting.summary}}"</a>
+								{%else%}
+									None
+								{%endif%}
 							</div>
 							<div class="col-sm-2">
 								{{supporting.dataCreated}}

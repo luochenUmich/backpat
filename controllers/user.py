@@ -119,14 +119,12 @@ def user_profile():
         #Supporters you have
         query = """select p.username, p.dateCreated, ci.postid, ci.comment, ci.summary
                     from pillar p
-                    left join (select c.username,c.comment, c.postid, po.summary 
-                        from comment c 
-                        left join post po on po.postid = c.commentid 
-                        where po.username = %s and c.active = 1 
-                        and po.active = 1 order by c.dateCreated desc
-                        limit 1) ci on ci.username = p.supportUsername
+                    left join (select c.username, c.dateCreated, c.comment, c.postid, c.summary
+                        from (select cSub.username, cSub.dateCreated, cSub.comment,po.postid, po.summary from comment cSub left join post po on po.postid = cSub.postid and po.active = 1 and cSub.active = 1 and po.username = %s) c 
+						left join (select cSub.username, cSub.dateCreated, cSub.comment,po.postid, po.summary from comment cSub left join post po on po.postid = cSub.postid and po.active = 1 and cSub.active = 1 and po.username = %s) c2 on c2.username = c.username and c2.dateCreated > c.dateCreated
+                        where c2.username is null) ci on ci.username = p.username
                     where p.supportUsername = %s"""
-        cur.execute(query, (session['username'],session['username']))
+        cur.execute(query, (session['username'],session['username'],session['username']))
         supporters = cur.fetchall()
         numSupporters = cur.rowcount
         for supporter in supporters:
