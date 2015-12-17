@@ -65,10 +65,18 @@ def show_post():
 	, removePostDisplay="default"if opUsername == session["username"] or getAdminLevel() >=2 else "none")
    
 def generateUniquename(username, postid, opUsername): #make this work better in future
-    name = "uniqueName" + str(username) + "-" + str(postid)
+    colors = ['Red', 'Blue', 'Violet', 'Green', 'Magenta', 'Purple', 'Black', 'Grey', 'Orange', 'Brown']
+    adjectives = ['Running', 'Swimming', 'Flying', 'Dancing', 'Walking', 'Jogging', 'Rolling', 'Singing', 'Jumping', 'Swinging']
+    nouns = [ 'Sparrow', 'Dolphin', 'Mouse', 'Squirrel', 'Robin', 'Dog', 'Cat', 'Frog', 'Spider', 'Aadvark']
+    userid = (hash(username) + int(postid))%1000
+
+    name = colors[userid/100] + adjectives[userid%100/10] + nouns[userid%10]
     if (username == opUsername):
         name += " (OP)"
-    return name
+
+    html = "<span style='background-color:" + colors[userid/100] + "; color:white; border-radius:3px; padding:2px;'>" + name +"</span>"
+
+    return html
     
 def generateCommentTree(commentid, postid, opUsername, showInactiveComments): #Returns the html of the comment tree starting at commentid recursively. If commentid = 0, start with the post itself
 	htmlToReturn = ""
