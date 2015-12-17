@@ -71,6 +71,11 @@ h1 {
 	border:1px solid gray;
 }
 
+.visRow{
+    background-color: white;
+    border-radius: 0px;
+}
+
 .table_header{
 	padding:2px;
 	margin:2px;

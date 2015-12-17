@@ -98,7 +98,7 @@
 					</div>
 				</div>
                 {% for comment in comments %}
-                    <div class="row">
+                    <div class="row visRow">
                         <div class="col-sm-7">
                             {{ comment.comment }}
                         </div>
@@ -161,7 +161,7 @@
 					</div>
 				</div>
 				{% for supporting in supportings %}
-					<div class="row">
+					<div class="row visRow">
 						<div class="col-sm-2">
 								<a href="{{url_for('main.main_route')}}?supporting={{supporting.username}}">{{supporting.username}}</a>
 							</div>
