@@ -195,10 +195,14 @@ def accept_pillar_request():
 		cursor = conn.cursor()
 		numToInsert = 0
 		insertValues = None
-		if(pillarRequestInfo["isTwoWay"] == "1"):
+		if(pillarRequestInfo["isTwoWay"]):
+			print("\n\nTwo way: " + _username + "-" + _otherUsername + "\n\n")
+			sys.stdout.flush()
 			numToInsert = 2
-			insertValues = (_username, _otherUsername, _username, _otherUsername)
+			insertValues = (_username, _otherUsername, _otherUsername, _username)
 		else:
+			print("\n\nOne way\n\n")
+			sys.stdout.flush()
 			numToInsert = 1
 			insertValues = (pillarRequestInfo["username"], pillarRequestInfo["supportUsername"])
 		try:
