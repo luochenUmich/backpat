@@ -196,13 +196,18 @@ def accept_pillar_request():
 		cursor = conn.cursor()
 		numToInsert = 0
 		insertValues = None
-		if(pillarRequestInfo["isTwoWay"] == 1):
+		print( "\n\n" + str(pillarRequestInfo["isTwoWay"].__class__) + " - " + str(pillarRequestInfo["isTwoWay"]) + "\n\n")
+		if(pillarRequestInfo["isTwoWayString"] == "1"):
+			print("\n\nTwo Way\n\n")
+			sys.stdout.flush()
 			numToInsert = 2
 			insertValues = (_username, _otherUsername, _otherUsername, _username)
 		else:
+			print("\n\One Way\n\n")
+			sys.stdout.flush()
 			numToInsert = 1
 			insertValues = (pillarRequestInfo["username"], pillarRequestInfo["supportUsername"])
-			cursor.execute("""update pillar_request set dateAccepted = CURRENT_TIMESTAMP() where (username = %s or supportUsername = %s) and requestedByUsername = %s""", (_username, _username, _otherUsername)) 
+			cursor.execute("""delete from pillar_request where (username = %s or supportUsername = %s) and requestedByUsername = %s""", (_username, _username, _otherUsername)) 
 			cursor.close()
 		try:
 			cursor = conn.cursor()
@@ -218,7 +223,7 @@ def accept_pillar_request():
 def getPillarRequestInfo(username, requestedByUsername):
 	conn = mysql.connection
 	cursor = conn.cursor(MySQLdb.cursors.DictCursor)
-	cursor.execute("""select * from pillar_request where ((supportUsername = %s or username = %s) and requestedByUsername = %s) limit 1""", (username, username, requestedByUsername))
+	cursor.execute("""select *, CASE WHEN isTwoWay THEN "1" ELSE "0" END as isTwoWayString from pillar_request where ((supportUsername = %s or username = %s) and requestedByUsername = %s) limit 1""", (username, username, requestedByUsername))
 	rVal = cursor.fetchone()
 	cursor.close()
 	return rVal
