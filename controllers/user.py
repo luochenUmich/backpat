@@ -135,7 +135,11 @@ def user_profile():
         #People you are supporting
         query = """select p.supportUsername as username, p.dateCreated, pi.postid, pi.summary
                     from pillar p
-                    left join (select po.username,po.postid, po.summary from post po where po.active = 1 order by po.dateCreated desc limit 1) pi on pi.username = p.supportUsername
+                    left join (	
+						select po.username,po.postid, po.summary
+						from post po 
+						left join post po2 on po2.username = po.username and po2.dateCreated > po.dateCreated
+						where po.active = 1 and po2.username is null) pi on pi.username = p.supportUsername
                     where p.username = %s"""
         cur.execute(query, (session['username'],))
         supportings = cur.fetchall()

@@ -195,19 +195,15 @@ def accept_pillar_request():
 		cursor = conn.cursor()
 		numToInsert = 0
 		insertValues = None
-		if(pillarRequestInfo["isTwoWay"]):
-			print("\n\nTwo way: " + _username + "-" + _otherUsername + "\n\n")
-			sys.stdout.flush()
+		if(pillarRequestInfo["isTwoWay"] == 1):
 			numToInsert = 2
 			insertValues = (_username, _otherUsername, _otherUsername, _username)
 		else:
-			print("\n\nOne way\n\n")
-			sys.stdout.flush()
 			numToInsert = 1
 			insertValues = (pillarRequestInfo["username"], pillarRequestInfo["supportUsername"])
-		try:
 			cursor.execute("""update pillar_request set dateAccepted = CURRENT_TIMESTAMP() where (username = %s or supportUsername = %s) and requestedByUsername = %s""", (_username, _username, _otherUsername)) 
 			cursor.close()
+		try:
 			cursor = conn.cursor()
 			cursor.execute("insert into pillar (username, supportUsername) values " + ("(%s,%s), (%s,%s);" if numToInsert > 1 else "(%s,%s);"), insertValues)
 			conn.commit()
