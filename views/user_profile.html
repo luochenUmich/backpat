@@ -65,8 +65,8 @@
         <div>
             <div id="post_tab" class="tab_content" >
                 {% for post in posts %}
-                    <div class="row post" style="border:1px solid black;">
-                        <div class="row postHeader">
+                    <div class="row post">
+                        <div class="row ">
                             <div class="col-sm-9">
                                 <div style="font-weight:bold; font-size:120%">
                                     <a href="/post/view?postid={{ post.postid }}">{{ post.summary }}</a>
@@ -86,7 +86,7 @@
                 {% endfor %}
             </div>
             <div id="comment_tab" class="tab_content" style="display: none;">
-				<div class="row postHeader" style="display: block;font-size:large;font-weight:bold">
+				<div class="row visRow postHeader" style="display: block;font-size:large;font-weight:bold">
 					<div class="col-sm-7">
 						Comment you wrote
 					</div>
@@ -98,7 +98,7 @@
 					</div>
 				</div>
                 {% for comment in comments %}
-                    <div class="row">
+                    <div class="row visRow">
                         <div class="col-sm-7">
                             {{ comment.comment }}
                         </div>
@@ -112,7 +112,7 @@
                 {% endfor %}
             </div>
 			<div id="supporters_tab" class="tab_content" style="display: none;">
-				<div class="row postHeader" style="display: block;font-size:large;font-weight:bold">
+				<div class="row visRow postHeader" style="display: block;font-size:large;font-weight:bold">
 					<div class="col-sm-2">
 						Username
 					</div>
@@ -127,7 +127,7 @@
 					</div>
 				</div>
 				{% for supporter in supporters %}
-					<div class="row post" style="border:1px solid black;">
+					<div class="row post" >
 						<div class="row postHeader">
 							<div class="col-sm-2">
 								<a href="{{url_for('main.main_route')}}?supporter={{supporter.username}}">{{supporter.username}}</a>
@@ -152,7 +152,7 @@
 				{% endfor %}
 			</div>
 			<div id="supporting_tab" class="tab_content" style="display: none;">
-				<div class="row postHeader" style="display: block;font-size:large;font-weight:bold">
+				<div class="row visRow postHeader" style="display: block;font-size:large;font-weight:bold">
 					<div class="col-sm-2">
 						Username
 					</div>
@@ -167,7 +167,7 @@
 					</div>
 				</div>
 				{% for supporting in supportings %}
-					<div class="row">
+					<div class="row post">
 						<div class="col-sm-2">
 								<a href="{{url_for('main.main_route')}}?supporting={{supporting.username}}">{{supporting.username}}</a>
 							</div>
@@ -188,7 +188,7 @@
 				{% endfor %}
 			</div>
 			<div id="requests_tab" class="tab_content" style="display: none;">
-				<div class="row postHeader" style="display: block;font-size:large;font-weight:bold">
+				<div class="row visRow postHeader" style="display: block;font-size:large;font-weight:bold">
 					<div class="col-sm-2">
 						Requested By
 					</div>

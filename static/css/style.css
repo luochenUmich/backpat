@@ -8,17 +8,26 @@ div{
    
 }
 
+* {
+    border-radius: 3px;
+    font-family: 'Open Sans', arial;
+}
+
+#userListHeader{
+    margin-bottom: 10px;
+}
 
 .post {
-	background-color: lightblue;
+	background-color: white;
 	margin:5px;
-	border: 3px solid #89bdd3;
+	border: 3px solid darkgrey;
 	border-radius: 3px;
     padding: 5px;
 }
+
 .post-title{
-	margin-top: 12px;
-	margin-left: 6px;
+    margin: 5px;
+    border-bottom: 3px solid darkgrey;
 }
 
 .post-content {
@@ -28,9 +37,9 @@ div{
 }
 
 .comment {
-	margin-left: 6px;
-	margin-bottom: 12px;
-	padding-top: 4px;
+    margin: 3px;
+    border: 1px solid darkgrey;
+    padding: 3px;
 }
 
 h1 {
@@ -47,18 +56,24 @@ h1 {
 	font-weight:bold;
 	text-align:left;
 	padding-left:1px;
+    background-color: white;
 }
 
 .table_row  > div{
 	text-align:left;
 	padding-left:1px;
+    background-color: white;
 }
 
 .table_row{
-	border-bottom:1px solid gray;
 	padding:2px;
 	margin:2px;
 	border:1px solid gray;
+}
+
+.visRow{
+    background-color: white;
+    border-radius: 0px;
 }
 
 .table_header{
@@ -75,9 +90,14 @@ h1 {
     border:1px solid gray;
     padding:10px;
     margin:10px;
+    background-color: white;
 }
 .dropdown{
     height:20px
+}
+
+.dropdown-menu{
+    position: static;
 }
 
 #userNameInfo{
@@ -95,36 +115,18 @@ h1 {
 #commentsArea{
     font-size:larger; 
     font-weight:bold;
-    border-bottom:1px solid black;
-    margin-top:3px;
-    margin-bottom:3px
 }
-/*.comment-child {*/
-	/*display: none;*/
-/*}*/
 
-/*.comment{*/
-	/*border: 3px solid lightblue;*/
-	/*border-radius: 3px;*/
-	/*padding-bottom: 10px;*/
-/*}*/
+.postHeader{
+    padding: 5px;
+}
 
-/*.commentHeader{*/
-	/*border-bottom: 2px solid lightblue;*/
-	/*margin-right: 0px;*/
-	/*margin-left: 0px;*/
-	/*}*/
-/*.commentContent{*/
-	/*padding-top: 10px;*/
-	/*padding-bottom: 10px;*/
-	/*margin-right: 0px;*/
-	/*margin-left: 0px;*/
-	/*}*/
-/*.commentContainer{*/
-/*margin-right: 0px;*/
-/*margin-left: 0px;*/
-/*}*/
+#mainForm{
+    border: 3px solid white;
+    padding: 5px;
+}
 
-/*.comment-button{*/
-	/*border-radius: 2px;*/
-/*}*/
+.userLine{
+    background-color:white;
+    border: 1px solid darkgray;
+}
