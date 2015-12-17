@@ -14,6 +14,9 @@ def main_route():
 	
 	_categoryIdFilter = 0
 	_categoryFilterName = "Show All"
+	_anchorMainPage = ""
+	if ('_anchorMainPage' in request.form):
+		_anchorMainPage = request.form["_anchorMainPage"].replace("#", "")
 	
 	query = """select p.postid, p.summary, p.description, p.dateCreated, p.dateLastModified, nc.ct, COALESCE(c.categoryName, 'None') as categoryName 
 				from post p
@@ -51,18 +54,19 @@ def main_route():
 			left join post p on p.postid = c.postid
 			where c.active = 1 and p.username = %s and p.active = 1 and c.username in (select username from pillar where supportUsername = %s)"""
 			
-		_usernameFilterSupportersValue = "0"
-		if('_usernameFilterSupportersValue' in request.args):
-			_usernameFilterSupportersValue = request.args.get('supporter')
 		selectParams = (session['username'],session['username'])
-		if ('_usernameFilterSupportersValue' in request.form):
+		_usernameFilterSupportersValue = "0"
+		if('supporter' in request.args):
+			_usernameFilterSupportersValue = request.args.get('supporter')
+		if (_usernameFilterSupportersValue == 0 and '_usernameFilterSupportersValue' in request.form):
 			_usernameFilterSupportersValue = sanitize(request.form['_usernameFilterSupportersValue'])
-			if (_usernameFilterSupportersValue != "0"):
-				query += " and c.username = %s "
-				selectParams = (session['username'],session['username'],_usernameFilterSupportersValue)
-			
-		supportings = {}
-		supporters = {}
+		print("\n\n_usernameFilterSupportersValue: " + _usernameFilterSupportersValue + "\n\n")
+		sys.stdout.flush()
+		if (_usernameFilterSupportersValue != "0"):
+			print("\n\Filtering by supporter: " + _usernameFilterSupportersValue + "\n\n")
+			sys.stdout.flush()
+			query += " and c.username = %s "
+			selectParams = (session['username'],session['username'],_usernameFilterSupportersValue)
 			
 		query += """ order by c.dateCreated desc"""
 		cursor = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -70,7 +74,6 @@ def main_route():
 		comments = cursor.fetchall()
 		for comment in comments:
 			comment['dataCreated'] = str(comment["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
-			supporters[comment['username']] = ""
 			
 		query = """select p.postid, p.summary, p.description, p.dateCreated, p.dateLastModified, nc.ct, COALESCE(c.categoryName, 'None') as categoryName, p.username
 					from post p
@@ -80,33 +83,39 @@ def main_route():
 		
 		selectParams = (session['username'],)
 		if ('_categoryidFilter' in request.form and is_int(request.form['_categoryidFilter'])):
-			_categoryIdFilter = sanitize(request.form['_categoryidFilter'])
+			_categoryIdFilter = int(sanitize(request.form['_categoryidFilter']))
 			if (_categoryIdFilter == -1):
 				query += " and c.categoryid is null "
 			elif (_categoryIdFilter != 0):
 				query += " and p.categoryid = " + str(_categoryIdFilter)
 				
-		_usernameFilterSupportingsValue = 0
-		if('_usernameFilterSupportingsValue' in request.args):
+		_usernameFilterSupportingsValue = "0"
+		if('supporting' in request.args):
 			_usernameFilterSupportingsValue = request.args.get('supporting')
-		if ('_usernameFilterSupportingsValue' in request.form):
+		if (_usernameFilterSupportingsValue == "0" and '_usernameFilterSupportingsValue' in request.form):
 			_usernameFilterSupportingsValue = sanitize(request.form['_usernameFilterSupportingsValue'])
-			if (_usernameFilterSupportingsValue != "0"):
-				query += " and p.username = %s "
-				selectParams = (_usernameFilterSupportingsValue, session['username'],)
+		print("\n\n_usernameFilterSupportingsValue: " + _usernameFilterSupportingsValue + "\n\n")
+		sys.stdout.flush()
+		if (_usernameFilterSupportingsValue != "0"):
+			print("\n\nFiltering by supporting: " + _usernameFilterSupportingsValue + "\n\n")
+			sys.stdout.flush()
+			query += " and p.username = %s "
+			selectParams = (session['username'],_usernameFilterSupportingsValue)
 				
 		query += """ order by p.dateCreated, p.dateLastModified, p.summary""";
+		print(query)
+		sys.stdout.flush()
 		cursor = conn.cursor(MySQLdb.cursors.DictCursor)
 		cursor.execute(query, selectParams)
 		supportingPosts = cursor.fetchall()
+		cursor.close()
 		for post in supportingPosts:
 			post['dataCreated'] = str(post["dateCreated"].strftime("%m/%d/%y %I:%M%p"))
-			supportings[post['username']] = ""
 		return render_template('index.html', Posts=htmlToReturn, categories=getCategories()
 			, _categoryidFilter = _categoryIdFilter, _categoryFilterName = _categoryFilterName, comments=comments
-			, supportingPosts=supportingPosts, _usernameFilterSupportersValue=_usernameFilterSupportersValue, _usernameFilterSupportingsValue=_usernameFilterSupportingsValue, supportings=supportings.keys(), supporters = supporters.keys())
+			, supportingPosts=supportingPosts, _usernameFilterSupportersValue=_usernameFilterSupportersValue, _usernameFilterSupportingsValue=_usernameFilterSupportingsValue, supportings=getSupporting(), supporters = getSupporters(), _anchorMainPage=_anchorMainPage)
 	else:
-		return render_template('index.html', Posts=htmlToReturn, categories=getCategories(), _categoryidFilter = _categoryIdFilter, _categoryFilterName = _categoryFilterName)
+		return render_template('index.html', Posts=htmlToReturn, categories=getCategories(), _categoryidFilter = _categoryIdFilter, _categoryFilterName = _categoryFilterName, _anchorMainPage=_anchorMainPage)
 
 def getCategories():
 	categories = ""
@@ -138,3 +147,23 @@ def getCategoryName(categoryid):
 	cursor.close()
 	return rVal
 	
+def getSupporters():
+	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+	cursor.execute("select distinct username from pillar where supportUsername = %s", (session["username"],))
+	supporters = cursor.fetchall()
+	cursor.close()
+	for user in supporters:
+		print("Supporter: " + user["username"] + "\n")
+	sys.stdout.flush()
+	return supporters
+	
+	
+def getSupporting():
+	cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+	cursor.execute("select distinct supportUsername as username from pillar where username = %s", (session["username"],))
+	supportings = cursor.fetchall()
+	cursor.close()
+	for user in supportings:
+		print("Suuporting: " + user["username"] + "\n")
+	sys.stdout.flush()
+	return supportings

@@ -62,7 +62,7 @@
     </ul>
     <div id="post">
 
-        <div>
+        <div id="user_profile_tabs">
             <div id="post_tab" class="tab_content" >
                 {% for post in posts %}
                     <div class="row post">
@@ -130,7 +130,7 @@
 					<div class="row post" >
 						<div class="row postHeader">
 							<div class="col-sm-2">
-								<a href="{{url_for('main.main_route')}}?supporter={{supporter.username}}">{{supporter.username}}</a>
+								<a href="{{url_for('main.main_route')}}?supporter={{supporter.username}}#supporters_tab">{{supporter.username}}</a>
 							</div>
 							<div class="col-sm-7">
 								"{{supporter.comment}}"
@@ -169,7 +169,7 @@
 				{% for supporting in supportings %}
 					<div class="row post">
 						<div class="col-sm-2">
-								<a href="{{url_for('main.main_route')}}?supporting={{supporting.username}}">{{supporting.username}}</a>
+								<a href="{{url_for('main.main_route')}}?supporting={{supporting.username}}#supporting_tab">{{supporting.username}}</a>
 							</div>
 							<div class="col-sm-7">
 								{% if supporting.summary %}

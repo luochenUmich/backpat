@@ -97,6 +97,7 @@ $(document).ready(function () {
         $('.tab_content').hide();
         var selected_tab = $(this).find("a").attr("href");
         $(selected_tab).show();
+		$("#_anchorMainPage").val(selected_tab);
     });
 	
 	$('#categoryDropDownFilter.dropdown-menu li').click(function() {
@@ -114,21 +115,6 @@ $(document).ready(function () {
 		return false;
 	});
 	
-	$('#categoryDropDownFilter.dropdown-menu li').click(function() {
-		var $target = $( this );
-	 
-		$target.closest( '.dropdown' )
-		  .find( '[data-bind="label"]' ).text( $target.text() )
-			 .end()
-		  .children( '.dropdown-toggle' ).dropdown( 'toggle' );
-		  
-		$('#usernameFilterSupportersValue').val($target.val());
-	 
-		document.getElementById("mainForm").submit();
-		
-		return false;
-	});
-	
 	$('#usernameFilterSupportings.dropdown-menu li').click(function() {
 		var $target = $( this );
 	 
@@ -137,7 +123,12 @@ $(document).ready(function () {
 			 .end()
 		  .children( '.dropdown-toggle' ).dropdown( 'toggle' );
 		  
-		$('#usernameFilterSupportingsValue').val($target.val());
+		text = $target.text();
+		if (text != "Show All"){
+			$('#usernameFilterSupportingsValue').val($target.text());
+		}else{
+			$('#usernameFilterSupportingsValue').val("0");
+		}
 	 
 		document.getElementById("mainForm").submit();
 		
@@ -152,8 +143,13 @@ $(document).ready(function () {
 			 .end()
 		  .children( '.dropdown-toggle' ).dropdown( 'toggle' );
 		  
-		$('#usernameFilterSupportersValue').val($target.val());
-	 
+		text = $target.text();
+		if (text != "Show All"){
+			$('#usernameFilterSupportersValue').val($target.text());
+		}else{
+			$('#usernameFilterSupportersValue').val("0");
+		}
+		
 		document.getElementById("mainForm").submit();
 		
 		return false;
@@ -165,8 +161,37 @@ $(document).ready(function () {
 			$('#main_tab_tabs .tab_content').hide();
 			$("#main_tab li a[href=#" + hash + "]").parent().addClass('active');
 			$("#" + hash).show();
+			$("#profile_tab li").removeClass('active');
+			$("#user_profile_tabs .tab_content").hide();
+			$("#profile_tab li a[href=#" + hash + "]").parent().addClass('active');
+			$("#" + hash).show();
+			$("#_anchorMainPage").val("#" + hash);
 	  } else {
-		  // No hash found
+		  hashFromFormValue = $("#_anchorMainPage").val();
+		  if (hashFromFormValue != ""){
+			  newHash = hashFromFormValue.replace("#", "");
+			  window.location.hash = newHash;
+			  $("#main_tab li").removeClass('active');
+				$('#main_tab_tabs .tab_content').hide();
+				$("#main_tab li a[href=#" + newHash + "]").parent().addClass('active');
+				$("#" + newHash).show();
+		  }
 	  }
+	  
+	 function setTabToHash(){
+		 if(window.location.hash) {
+			  var hash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
+				$("#main_tab li").removeClass('active');
+				$('#main_tab_tabs .tab_content').hide();
+				$("#main_tab li a[href=#" + hash + "]").parent().addClass('active');
+				$("#" + hash).show();
+				$("#profile_tab li").removeClass('active');
+				$("#user_profile_tabs .tab_content").hide();
+				$("#profile_tab li a[href=#" + hash + "]").parent().addClass('active');
+				$("#" + hash).show();
+		  } else {
+			  // No hash found
+		  }
+	 };
 });
 

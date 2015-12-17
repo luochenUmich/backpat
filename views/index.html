@@ -7,7 +7,8 @@
         {% endif %}
     {% endwith %}
 
-	<form id="mainForm" class="form-horizontal" method="post" action="{{ url_for('main.main_route') }}#">
+	<form id="mainForm" class="form-horizontal" method="post" action="{{ url_for('main.main_route') }}">
+		<input type="hidden" name="_anchorMainPage" value="{{_anchorMainPage}}" id="_anchorMainPage" />
 		<div>
 			{% if session.username %}
 				<div style="display:block;">
@@ -76,7 +77,7 @@
 									<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" id="usernameFilterSupportings">
 										<li role="presentation" value="0"><a role="menuitem" tabindex="-1" href="#">Show All</a></li>
 										{% for supporting in supportings %}
-											<li role="presentation" value="{{supporting}}"><a role="menuitem" tabindex="-1" href="#supporting_tab">{{supporting}}</a></li>
+											<li role="presentation" value="{{supporting.username}}"><a role="menuitem" tabindex="-1" href="#supporting_tab">{{supporting.username}}</a></li>
 										{% endfor %}
 									</ul>
 									<input type="hidden" id="usernameFilterSupportingsValue" name="_usernameFilterSupportingsValue" value="{{_usernameFilterSupportingsValue}}">  </input>
@@ -92,8 +93,8 @@
 											<span data-bind="label">{{_categoryFilterName}}</span><span class="caret"></span>
 										</button>
 										<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" id="categoryDropDownFilter">
-											<li role="presentation" value="0"><a role="menuitem" tabindex="-1" href="#">Show All</a></li>
-											<li role="presentation" value="-1"><a role="menuitem" tabindex="-1" href="#">None</a></li>
+											<li role="presentation" value="0"><a role="menuitem" tabindex="-1" href="#supporting_tab">Show All</a></li>
+											<li role="presentation" value="-1"><a role="menuitem" tabindex="-1" href="#supporting_tab">None</a></li>
 											{{categories|safe}}
 										</ul>
 										<input type="hidden" id="categoryFilterValue" name="_categoryidFilter" value="{{_categoryidFilter}}">  </input>
@@ -143,7 +144,7 @@
 									<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" id="usernameFilterSupporters">
 										<li role="presentation" value="0"><a role="menuitem" tabindex="-1" href="#supporters_tab">Show All</a></li>
 										{% for supporter in supporters %}
-											<li role="presentation" value="{{supporter}}"><a role="menuitem" tabindex="-1" href="#supporters_tab">{{supporter}}</a></li>
+											<li role="presentation" value="{{supporter.username}}"><a role="menuitem" tabindex="-1" href="#supporters_tab">{{supporter.username}}</a></li>
 										{% endfor %}
 									</ul>
 									<input type="hidden" id="usernameFilterSupportersValue" name="_usernameFilterSupportersValue" value="{{_usernameFilterSupportersValue}}">  </input>

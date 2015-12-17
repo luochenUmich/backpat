@@ -156,8 +156,9 @@ def remove_pillar():
 	cursor = conn.cursor()
 	cursor.execute("""delete from pillar where (username = %s and supportUsername = %s) or (supportUsername = %s and username = %s)""", (_username, otherUsername, _username, otherUsername,))
 	conn.commit()
+	flash("Pillar deleted")
 	cursor.close()
-	return ""
+	return redirect(url_for('user.user_profile', _anchor='supporting_tab'))
 	
 @pillar_request.route('/pillar/remove_request',methods=['GET'])
 def remove_pillar_request():
@@ -167,14 +168,14 @@ def remove_pillar_request():
 	_username = session['username']
 	if ('otherUsername' not in request.args):
 		flash('Specify another user username')
-		return redirect(redirect_url(request))
+		return redirect(url_for('user.user_profile', _anchor='request_tab'))
 	
 	conn = mysql.connection
 	cursor = conn.cursor()
 	cursor.execute("""delete from pillar_request where (username = %s and supportUsername = %s) or (supportUsername = %s and username = %s)""", (_username, otherUsername, _username, otherUsername,))
 	conn.commit()
 	cursor.close()
-	return redirect(redirect_url(request))
+	return redirect(url_for('user.user_profile', _anchor='request_tab'))
 	
 @pillar_request.route('/pillar/accept',methods=['GET'])
 def accept_pillar_request():
@@ -212,7 +213,7 @@ def accept_pillar_request():
 			print("\n" + str(traceback.format_exception(*sys.exc_info())) + "\n")
 			flash('Failed to accept pillar request')
 		cursor.close()
-	return redirect(redirect_url(request))
+	return redirect(url_for('user.user_profile', _anchor='request_tab'))
 	
 def getPillarRequestInfo(username, requestedByUsername):
 	conn = mysql.connection
