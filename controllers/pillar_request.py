@@ -56,9 +56,6 @@ def create():
 			isValidOtherWay = checkPillarValidity(_otherUsername, _username)
 			if (isValidOneWay == "" and isValidOtherWay == ""):
 				cursor.execute("insert into pillar_request (username, supportUsername, reason, isTwoWay, requestedByUsername) values (%s, %s, %s, %s, %s)", (_username, _otherUsername, _reason, _isTwoWay, _username))
-				cursor.close()
-				cursor = conn.cursor()
-				cursor.execute("insert into pillar_request (username, supportUsername, reason, isTwoWay, requestedByUsername) values (%s, %s, %s, %s, %s)", (_otherUsername, _username, _reason, _isTwoWay, _username))
 			else:
 				flash(isValidOneWay + " " + isValidOtherWay)
 				return redirect(redirect_url(request))
