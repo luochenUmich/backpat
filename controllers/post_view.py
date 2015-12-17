@@ -99,7 +99,7 @@ def generateCommentTree(commentid, postid, opUsername, showInactiveComments): #R
 		showUsername = ((comment["isPillar"] == 1 and opUsername == session["username"]) or getAdminLevel() > 1)
 		commenter = comment["username"]
 		removeTextComment = "Remove" if comment["active"] == 1 else "DELETED"
-		commenterDisplay = (generateUniquename(commenter,postid,opUsername) if showUsername else commenter) + (" (You)" if commenter==session["username"] else ("(Pillar)" if comment["isPillar"] == 1 else "") )
+		commenterDisplay = (generateUniquename(commenter,postid,opUsername) if not showUsername else commenter) + (" (You)" if commenter==session["username"] else ("(Pillar)" if comment["isPillar"] == 1 else "") )
 		htmlToReturn += comment_template_html.format(str(comment["commentid"]), comment["comment"].encode('ascii', 'ignore')
 		, str(comment["commentid"]), str(id), str(comment["commentid"])
 		, str(comment["commentid"]), str(comment["commentid"]), displayRemoveComment, removeTextComment
