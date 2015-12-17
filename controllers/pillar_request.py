@@ -49,18 +49,30 @@ def create():
 		
 		_isTwoWay = (_pillarRequestTypeDropdownVal == "2")
 		cursor = conn.cursor()
-		if (_isTwoWay or _pillarRequestTypeDropdownVal == "0"):
+		print("\nPillar request type " + _pillarRequestTypeDropdownVal)
+		sys.stdout.flush()
+		if (_isTwoWay):
 			isValidOneWay = checkPillarValidity(_username, _otherUsername)
 			isValidOtherWay = checkPillarValidity(_otherUsername, _username)
 			if (isValidOneWay == "" and isValidOtherWay == ""):
 				cursor.execute("insert into pillar_request (username, supportUsername, reason, isTwoWay, requestedByUsername) values (%s, %s, %s, %s, %s)", (_username, _otherUsername, _reason, _isTwoWay, _username))
+				cursor.close()
+				cursor = conn.cursor()
+				cursor.execute("insert into pillar_request (username, supportUsername, reason, isTwoWay, requestedByUsername) values (%s, %s, %s, %s, %s)", (_otherUsername, _username, _reason, _isTwoWay, _username))
 			else:
 				flash(isValidOneWay + " " + isValidOtherWay)
+				return redirect(redirect_url(request))
+		elif (_pillarRequestTypeDropdownVal == "1"):
+			isValidOtherWay = checkPillarValidity(_otherUsername, _username)
+			if (isValidOtherWay == ""):
+				cursor.execute("insert into pillar_request (username, supportUsername, reason, isTwoWay, requestedByUsername) values (%s, %s, %s, %s, %s)", (_otherUsername, _username, _reason, 0, _username))
+			else:
+				flash(isValidOtherWay)
 				return redirect(redirect_url(request))
 		else: 
 			isValidOneWay = checkPillarValidity(_username, _otherUsername)
 			if (isValidOneWay == ""):
-				cursor.execute("insert into pillar_request (username, supportUsername, reason, isTwoWay, requestedByUsername) values (%s, %s, %s, %s, %s)", (_otherUsername, _username, _reason, 0, _username))
+				cursor.execute("insert into pillar_request (username, supportUsername, reason, isTwoWay, requestedByUsername) values (%s, %s, %s, %s, %s)", (_username, _otherUsername, _reason, 0, _username))
 			else:
 				flash(isValidOneWay)
 				return redirect(redirect_url(request))
@@ -120,12 +132,12 @@ def checkPillarValidity(username, supportUsername):
 	conn = mysql.connection
 	cursor = conn.cursor()
 	query = """select count(*) from pillar where supportUsername = %s and username = %s """
-	cursor.execute(query, (username,supportUsername,))
+	cursor.execute(query, (supportUsername,username,))
 	errorText = ""
 	row = cursor.fetchone()
 	if (row and is_int(row[0]) and int(row[0]) > 0):
 		errorText += "This pillar relationship already exists"
-	cursor.execute("select count(*) from pillar_request where supportUsername = %s and username = %s ", (username,supportUsername,))
+	cursor.execute("select count(*) from pillar_request where supportUsername = %s and username = %s ", (supportUsername,username,))
 	row = cursor.fetchone()
 	if (row and is_int(row[0]) and int(row[0]) > 0):
 		errorText += "There already exists a pending request for this pillar relationship"
